@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Baking Time</string>
+    <string name="recipe_ingredients_textview">Ingredient Textview</string>
+</resources>
