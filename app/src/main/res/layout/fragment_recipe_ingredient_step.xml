@@ -3,19 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recipe_ingredient_step_nestedscrollview"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    android:paddingBottom="?attr/actionBarSize">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/recipe_ingredient_step_framelayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:descendantFocusability="blocksDescendants">
 
         <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/recipe_ingredients_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:backgroundTint="@color/colorPrimary"
             android:text="@string/recipe_ingredients_textview"/>
 
         <android.support.v7.widget.RecyclerView

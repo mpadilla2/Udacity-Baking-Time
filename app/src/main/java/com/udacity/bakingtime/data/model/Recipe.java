@@ -54,6 +54,14 @@ public class Recipe{
         return ingredients;
     }
 
+    public String getIngredientsString(){
+        StringBuilder ingredientStr = new StringBuilder();
+        for (Ingredient ingredient : ingredients){
+            ingredientStr.append(ingredient);
+        }
+        return ingredientStr.toString();
+    }
+
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }

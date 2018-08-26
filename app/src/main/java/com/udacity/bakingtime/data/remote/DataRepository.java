@@ -28,17 +28,16 @@ public class DataRepository {
 
     public LiveData<List<Recipe>> getAllRecipes(){
 
-        final MutableLiveData<List<Recipe>> data = new MutableLiveData<>();
+        final MutableLiveData<List<Recipe>> recipes = new MutableLiveData<>();
 
         mApiClient.getRecipes().enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(@NonNull Call<List<Recipe>> call, @NonNull Response<List<Recipe>> response) {
                 if (response.isSuccessful()){
-                    assert response.body() != null;
-                    if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-                        data.setValue(response.body());
+                    if (response.body() != null) {
+                        recipes.setValue(response.body());
+                        Log.d("DATAREPOSITORY", "LOADED RECIPES FOR FROM INTERNET API");
                     }
-                    Log.d("DATAREPOSITORY", "LOADED RECIPES FOR FROM INTERNET API");
                 }
             }
 
@@ -47,8 +46,7 @@ public class DataRepository {
                 Log.d("DATAREPOSITORY", "LOADING RECIPES FROM INTERNET API FOR FAILED");
             }
         });
-
-        return data;
+        return recipes;
     }
 }
 

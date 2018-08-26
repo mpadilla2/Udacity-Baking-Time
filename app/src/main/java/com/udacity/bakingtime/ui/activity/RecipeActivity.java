@@ -13,35 +13,18 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
-// Todo BUG ingredients textview is not showing the first 3 ingredients
-//      it's like they are behind the toolbar
-// Todo BUG recipe steps cuts off the first step: Recipe Introduction on all recipes except first one.
-//      The difference between first recipe and the others is
-//          all of the steps fit in the screen for the first recipe.
-// Todo BUG on rotate recipe steps dissapear; title changes from recipe name to baking time.
-    // on rotate back the recipe steps come back, but the title stays at baking time.
-    // Test: onactivitycreated contains:
-    //        code to populate recyclerview
-    //        code to set the toolbar title
-    //        this method fires ever time I rotate the phone
-    //        so why does the recyclerview populate sometimes but not others?
-    //        why does the toolbar not get set again?
-// Todo add recipe ingredients to recipe ingredient step fragment
-// Todo set up recipe step content with media player showing video thumbnail or image
-// Todo set up recipe step content with recipe step instructions
-// Todo set up recipe step content with previous and next step instructions
+// Todo format ingredients display text to be similar to recyclerview text display
 // Todo set up phone landscape view after portrait is finished
 // Todo set up tablet views after phone views are finished
 
-// DONE BUG on scroll recipe steps become wider and wider apart
-
-
-/*
- * In RecipeStepContentFragment:
- * Get the selectedRecipeStep variable from the viewmodel,
- *      Display the recipe step content for the selected recipe step
- */
-
+// Todo BUGS IN PHONE LANDSCAPE MODE
+// Todo BUG on rotate recipe title changes from recipe name to baking time; on rotate back the title stays at baking time.
+// Test: onactivitycreated contains:
+//        code to populate recyclerview
+//        code to set the toolbar title
+//        this method fires every time I rotate the phone
+//        so why does the recyclerview populate sometimes but not others?
+//        why does the toolbar not get set again?
 
 public class RecipeActivity extends AppCompatActivity{
 

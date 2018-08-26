@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+// https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format/35238038#35238038
 public class RecipeListFragment extends ViewLifecycleFragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String RECIPE_INGREDIENT_STEP_FRAGMENT = "recipe_ingredient_step_fragment";
     private static final String RECIPE_LIST_STATE = "recipe_list_state";
 
-    private int mColumnCount = 1;
+    private int mColumnCount = 3;
     private List<Recipe> mRecipeList = new ArrayList<>();
     private RecipeViewModel mRecipeViewModel;
     private RecipeAdapter mRecipeAdapter;
+    private boolean isTablet;
 
 
     public static RecipeListFragment newInstance(int columnCount){
@@ -72,26 +74,23 @@ public class RecipeListFragment extends ViewLifecycleFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+        Log.d("isTablet", "is: " + isTablet);
 
-        if (view instanceof RecyclerView){
-            Context context = view.getContext();
-            RecyclerView recyclerView = view.findViewById(R.id.recipe_recyclerview);
-            if (mColumnCount <=1){
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        RecyclerView recyclerView = view.findViewById(R.id.recipe_recyclerview);
+
+        mRecipeAdapter = new RecipeAdapter(mRecipeList, new CustomItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // Reference: https://developer.android.com/topic/libraries/architecture/viewmodel#sharing
+                mRecipeViewModel.setSelectedRecipe(mRecipeList.get(position));
+                launchRecipeIngredientsSteps();
             }
+        });
 
-            mRecipeAdapter = new RecipeAdapter(mRecipeList, new CustomItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    // Reference: https://developer.android.com/topic/libraries/architecture/viewmodel#sharing
-                    mRecipeViewModel.setSelectedRecipe(mRecipeList.get(position));
-                    launchRecipeIngredientsSteps();
-                }
-            });
-            recyclerView.setAdapter(mRecipeAdapter);
-        }
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), mColumnCount));
+        recyclerView.setAdapter(mRecipeAdapter);
+
         return view;
     }
 
@@ -100,18 +99,20 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setUpViewModel();
+        //setUpViewModel();
         loadRecipes();
     }
 
 
     private void setUpViewModel(){
-        mRecipeViewModel = ViewModelProviders.of(
-                Objects.requireNonNull(getActivity())).get(RecipeViewModel.class);
+
     }
 
 
     private void loadRecipes(){
+        mRecipeViewModel = ViewModelProviders.of(
+                Objects.requireNonNull(getActivity())).get(RecipeViewModel.class);
+
         final Observer<List<Recipe>> recipeListObserver = new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Baking Time</string>
     <string name="recipe_ingredients_textview">Ingredient Textview</string>
+    <string name="recipe_step_instructions_textView">Step Instructions Text</string>
+    <string name="recipe_step_content_imageView">recipe step content imageview</string>
+    <string name="recipe_step_content_previous_button">Previous</string>
+    <string name="recipe_step_content_next_button">Next</string>
 </resources>

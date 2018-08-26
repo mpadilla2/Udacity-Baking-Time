@@ -57,8 +57,6 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
 
@@ -121,7 +119,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     private void loadIngredients(){
         mIngredientsTextView.setText(Objects.requireNonNull(
                 mRecipeViewModel.getSelectedRecipe()
-                        .getValue()).getIngredients().toString());
+                        .getValue()).getIngredientsString());
     }
 
 
@@ -156,7 +154,6 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
                 fragmentTransaction.hide(fragment);
             }
         }
-
         fragmentTransaction.commit();
     }
 }
