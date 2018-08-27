@@ -13,29 +13,32 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
-// Monday
-// Todo Exoplayer - rotation correctly continues the video at proper position
-
 
 // Tuesday
-// Todo proper network check before grabbing info - use intent service this time!
+// Todo RecipeStepContentFragment is a mess. Spaghetti code every where. Clean it up before proceeding with other things.
 
 
 // Wednesday
-// Todo add homescreen widget that displays ingredient list for selected recipe
+// Todo bug onclick next/previous: if next/previous is clicked while playing the video the video keeps playing or the next video starts playing
+// Todo Exoplayer - rotation correctly continues the video at proper position
 
 
 // Thursday
-// Todo Espresso tests of the UI
+// Todo proper network check before grabbing info - use intent service this time!
 
 
 // Friday
+// Todo add homescreen widget that displays ingredient list for selected recipe
+
+
+// Saturday
+// Todo Espresso tests of the UI
 // Todo format ingredients display text to be similar to recyclerview text display
 // Todo set up phone landscape view after portrait is finished
 // Todo set up tablet views after phone views are finished
 
 
-// Saturday
+// Sunday
 // Todo extract all dimensions, strings
 // Todo clean code
 // Todo review rubric, mocks to see if missed anything
