@@ -13,12 +13,34 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
+// Monday
+// Todo Exoplayer - rotation correctly continues the video at proper position
+
+
+// Tuesday
+// Todo proper network check before grabbing info - use intent service this time!
+
+
+// Wednesday
+// Todo add homescreen widget that displays ingredient list for selected recipe
+
+
+// Thursday
+// Todo Espresso tests of the UI
+
+
+// Friday
 // Todo format ingredients display text to be similar to recyclerview text display
 // Todo set up phone landscape view after portrait is finished
 // Todo set up tablet views after phone views are finished
 
-// Todo BUGS IN PHONE LANDSCAPE MODE
-// Todo BUG on rotate recipe title changes from recipe name to baking time; on rotate back the title stays at baking time.
+
+// Saturday
+// Todo extract all dimensions, strings
+// Todo clean code
+// Todo review rubric, mocks to see if missed anything
+
+
 // Test: onactivitycreated contains:
 //        code to populate recyclerview
 //        code to set the toolbar title
@@ -35,8 +57,6 @@ public class RecipeActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-
-        setToolBarTitle();
 
         if (savedInstanceState != null){
             Log.d("RECIPEACTIVITY", "SAVEDINSTANCESTATE EXISTS");
@@ -71,15 +91,9 @@ public class RecipeActivity extends AppCompatActivity{
         super.onBackPressed();
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-            setToolBarTitle();
-        }
-    }
-
-
-    private void setToolBarTitle() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_activity_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+            Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_activity_toolbar);
+            setSupportActionBar(toolbar);
+            toolbar.setTitle(getTitle());        }
     }
 }
 
