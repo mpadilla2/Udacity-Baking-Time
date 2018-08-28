@@ -22,6 +22,7 @@ import com.udacity.bakingtime.data.adapter.RecipeAdapter;
 import com.udacity.bakingtime.data.listener.CustomItemClickListener;
 import com.udacity.bakingtime.data.model.Recipe;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
+import com.udacity.bakingtime.ui.utils.RecyclerViewItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,8 @@ public class RecipeListFragment extends ViewLifecycleFragment {
             }
         });
 
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.list_layout_margin);
+        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(1, spacingInPixels, true, 0));
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), mColumnCount));
         recyclerView.setAdapter(mRecipeAdapter);
 

@@ -13,9 +13,9 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
+
 // Wednesday
-// Todo bug onclick next/previous: if next/previous is clicked while playing the video
-//              the video keeps playing or the next video starts playing
+// Todo - Bug white space above exoplayer in both portrait and landscape
 // Todo Exoplayer - rotation correctly continues the video at proper position
 
 
@@ -30,7 +30,6 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 // Saturday
 // Todo Espresso tests of the UI
 // Todo format ingredients display text to be similar to recyclerview text display
-// Todo set up phone landscape view after portrait is finished
 // Todo set up tablet views after phone views are finished
 
 

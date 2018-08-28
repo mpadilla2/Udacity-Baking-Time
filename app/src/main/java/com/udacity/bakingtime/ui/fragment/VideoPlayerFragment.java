@@ -2,10 +2,12 @@ package com.udacity.bakingtime.ui.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,9 @@ import com.udacity.bakingtime.data.model.Step;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 
 import java.util.Objects;
+
+import static com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL;
+import static com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT;
 
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
 // Other Reference: https://medium.com/fungjai/playing-video-by-exoplayer-b97903be0b33
@@ -85,9 +90,20 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
+        final AppBarLayout appBarLayout = getActivity().findViewById(R.id.recipe_activity_app_bar);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
         mImageView = view.findViewById(R.id.recipe_step_content_imageView);
+
+        if (isLandscape){
+            mPlayerView.setResizeMode(RESIZE_MODE_FILL);
+            appBarLayout.setVisibility(View.INVISIBLE);
+        } else {
+            mPlayerView.setResizeMode(RESIZE_MODE_FIT);
+            appBarLayout.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -113,7 +129,11 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         super.onSaveInstanceState(outState);
 
         // We've already stored necessary exoplayer state in variables, released exoplayer and set it to null.
-        if (mExoPlayer == null){
+        if (mExoPlayer != null){
+            mPlayBackPosition = mExoPlayer.getCurrentPosition();
+            mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
+            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+
             outState.putLong(PLAYBACK_POSITION, mPlayBackPosition);
             outState.putInt(CURRENT_WINDOW_INDEX, mCurrentWindow);
             outState.putBoolean(PLAY_WHEN_READY, mPlayWhenReady);
@@ -124,10 +144,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        if (Util.SDK_INT <= 23){
-            releasePlayer();
-        }
+        releasePlayer();
     }
 
 
@@ -147,9 +164,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     public void onStop() {
         super.onStop();
 
-        if (Util.SDK_INT > 23){
-            releasePlayer();
-        }
+        releasePlayer();
     }
 
 
@@ -158,6 +173,9 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         final Observer<Step> stepObserver = new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
+                if (mExoPlayer != null){
+                    releasePlayer();
+                }
                 // set the mediaUrl for the selected recipe
                 if (step.getVideoURL().isEmpty()){
                     if (step.getThumbnailURL().isEmpty()){
