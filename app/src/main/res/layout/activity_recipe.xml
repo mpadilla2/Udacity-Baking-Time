@@ -26,7 +26,8 @@
         android:id="@+id/activity_fragment_container"
         android:name="FragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
         app:layout_constraintTop_toBottomOf="@id/recipe_activity_app_bar"
         app:layout_constraintStart_toStartOf="parent">
     </FrameLayout>

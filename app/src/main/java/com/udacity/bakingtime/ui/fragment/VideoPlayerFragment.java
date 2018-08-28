@@ -87,6 +87,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
 
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
+        mImageView = view.findViewById(R.id.recipe_step_content_imageView);
 
         return view;
     }

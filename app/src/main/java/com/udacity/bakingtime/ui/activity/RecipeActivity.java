@@ -13,13 +13,9 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
-
-// Tuesday
-// Todo RecipeStepContentFragment is a mess. Spaghetti code every where. Clean it up before proceeding with other things.
-
-
 // Wednesday
-// Todo bug onclick next/previous: if next/previous is clicked while playing the video the video keeps playing or the next video starts playing
+// Todo bug onclick next/previous: if next/previous is clicked while playing the video
+//              the video keeps playing or the next video starts playing
 // Todo Exoplayer - rotation correctly continues the video at proper position
 
 
