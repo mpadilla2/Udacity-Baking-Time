@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -101,7 +102,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
             mPlayerView.setResizeMode(RESIZE_MODE_FILL);
             appBarLayout.setVisibility(View.INVISIBLE);
         } else {
-            mPlayerView.setResizeMode(RESIZE_MODE_FIT);
+            //mPlayerView.setResizeMode(RESIZE_MODE_FIT);
             appBarLayout.setVisibility(View.VISIBLE);
         }
 
@@ -295,6 +296,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         mPlayerView.setPlayer(mExoPlayer);
         mExoPlayer.setPlayWhenReady(mPlayWhenReady);
         mExoPlayer.seekTo(mCurrentWindow, mPlayBackPosition);
+        mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
 

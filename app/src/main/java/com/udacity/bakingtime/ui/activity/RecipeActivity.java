@@ -16,6 +16,8 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
 // Wednesday
 // Todo - Bug white space above exoplayer in both portrait and landscape
+// Todo - Bug split the screen correctly between exoplayer and other content
+// Todo - Other content should not show in landscape, only exoplayer
 // Todo Exoplayer - rotation correctly continues the video at proper position
 
 
