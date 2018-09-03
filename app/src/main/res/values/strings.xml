@@ -2,7 +2,12 @@
     <string name="app_name">Baking Time</string>
     <string name="recipe_ingredients_textview">Ingredient Textview</string>
     <string name="recipe_step_instructions_textView">Step Instructions Text</string>
-    <string name="recipe_step_content_imageView">recipe step content imageview</string>
+    <string name="recipe_step_content_textView">recipe step content imageview</string>
     <string name="recipe_step_content_previous_button">Previous</string>
     <string name="recipe_step_content_next_button">Next</string>
+    <string name="appwidget_text">App Widget</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_id_label">Widget ID</string>
+    <string name="recipe_item_image">recipe item image</string>
+    <string name="recipe_step_content_textView_text">No Video Available</string>
 </resources>

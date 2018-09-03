@@ -2,6 +2,7 @@ package com.udacity.bakingtime.ui.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,17 +18,21 @@ import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 
 import java.util.Objects;
 
+public class RecipeInstructionsFragment extends ViewLifecycleFragment {
 
-public class RecipeStepContentFragment extends ViewLifecycleFragment {
+    // todo checking tablet mode to set views visible/gone or visible
+    // todo - view.SYSTEM_UI_FLAG_FULLSCREEN reference: https://developer.android.com/training/system-ui/immersive
+
 
     private RecipeViewModel mRecipeViewModel;
     private TextView mStepInstructions;
     private Button mPreviousButton;
     private Button mNextButton;
+    boolean isLandscape;
 
 
-    public static RecipeStepContentFragment newInstance(){
-        RecipeStepContentFragment fragment = new RecipeStepContentFragment();
+    public static RecipeInstructionsFragment newInstance(){
+        RecipeInstructionsFragment fragment = new RecipeInstructionsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -38,7 +43,7 @@ public class RecipeStepContentFragment extends ViewLifecycleFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RecipeStepContentFragment(){
+    public RecipeInstructionsFragment(){
     }
 
 
@@ -53,12 +58,11 @@ public class RecipeStepContentFragment extends ViewLifecycleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_recipe_step_content, container, false);
+        View view = inflater.inflate(R.layout.fragment_recipe_instructions, container, false);
         mStepInstructions = view.findViewById(R.id.recipe_step_instructions_textView);
         mPreviousButton = view.findViewById(R.id.recipe_step_content_previous_button);
         mNextButton = view.findViewById(R.id.recipe_step_content_next_button);
 
-        setupButtonClickListeners();
         return view;
     }
 
@@ -67,9 +71,19 @@ public class RecipeStepContentFragment extends ViewLifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
         setUpViewModel();
+
+        if (isLandscape){
+            setUpViewsInLandscape();
+        } else {
+            setUpViewsInPortrait();
+            setupButtonClickListeners();
+            loadButtonObservers();
+        }
+
         loadRecipeStepContent();
-        loadButtonObservers();
     }
 
 
@@ -84,9 +98,12 @@ public class RecipeStepContentFragment extends ViewLifecycleFragment {
         final Observer<Step> stepObserver = new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
-                mStepInstructions.setText(Objects.requireNonNull(step).getDescription());
+                if (!isLandscape) {
+                    mStepInstructions.setText(Objects.requireNonNull(step).getDescription());
+                }
             }
         };
+
         mRecipeViewModel.getSelectedRecipeStep()
                 .observe(Objects.requireNonNull(getViewLifecycleOwner()), stepObserver);
     }
@@ -139,5 +156,19 @@ public class RecipeStepContentFragment extends ViewLifecycleFragment {
                 mRecipeViewModel.getNextRecipeStep();
             }
         });
+    }
+
+
+    private void setUpViewsInLandscape(){
+        mPreviousButton.setVisibility(View.GONE);
+        mNextButton.setVisibility(View.GONE);
+        mStepInstructions.setVisibility(View.GONE);
+    }
+
+
+    private void setUpViewsInPortrait(){
+        mPreviousButton.setVisibility(View.VISIBLE);
+        mNextButton.setVisibility(View.VISIBLE);
+        mStepInstructions.setVisibility(View.VISIBLE);
     }
 }

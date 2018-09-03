@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recipe_item_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -14,16 +14,37 @@
         app:cardElevation="5dp"
         android:layout_centerHorizontal="true">
 
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/recipe_item_textview"
-            style="?android:attr/textAppearanceLarge"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            tools:layout_editor_absoluteX="53dp"
-            tools:layout_editor_absoluteY="150dp" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/recipe_item_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/recipe_item_image_height"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/recipe_item_image" />
+
+            <!--
+            Added scrim for better readability with text overlayed on image.
+            Reference: https://android.jlelse.eu/creating-the-flexible-space-with-image-pattern-on-android-b5f8908b9921-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/recipe_item_image_scrim_height"
+                android:layout_gravity="bottom"
+                android:background="@drawable/scrim"/>
+
+            <TextView
+                android:id="@+id/recipe_item_textview"
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="16dp"/>
+        </FrameLayout>
 
     </android.support.v7.widget.CardView>
 

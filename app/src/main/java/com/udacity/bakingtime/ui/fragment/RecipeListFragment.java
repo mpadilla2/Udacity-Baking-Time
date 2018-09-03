@@ -2,20 +2,21 @@ package com.udacity.bakingtime.ui.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.adapter.RecipeAdapter;
@@ -39,7 +40,7 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     private List<Recipe> mRecipeList = new ArrayList<>();
     private RecipeViewModel mRecipeViewModel;
     private RecipeAdapter mRecipeAdapter;
-    private boolean isTablet;
+    private boolean mIsTablet;
 
 
     public static RecipeListFragment newInstance(int columnCount){
@@ -66,6 +67,14 @@ public class RecipeListFragment extends ViewLifecycleFragment {
         if (getArguments() != null){
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        if (getActivity().findViewById(R.id.item_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mIsTablet = true;
+        }
     }
 
 
@@ -75,8 +84,9 @@ public class RecipeListFragment extends ViewLifecycleFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
-        isTablet = getResources().getBoolean(R.bool.isTablet);
-        Log.d("isTablet", "is: " + isTablet);
+
+        mIsTablet = getResources().getBoolean(R.bool.isTablet);
+        Log.d("mIsTablet", "is: " + mIsTablet);
 
         RecyclerView recyclerView = view.findViewById(R.id.recipe_recyclerview);
 
@@ -102,13 +112,7 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //setUpViewModel();
         loadRecipes();
-    }
-
-
-    private void setUpViewModel(){
-
     }
 
 
@@ -130,6 +134,10 @@ public class RecipeListFragment extends ViewLifecycleFragment {
 
     private void launchRecipeIngredientsSteps(){
 
+        // if it's twopane then need to:
+        // load recipe_list_fragment in left container
+        // load recipe step content in right container
+
         FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -140,6 +148,10 @@ public class RecipeListFragment extends ViewLifecycleFragment {
             fragmentTransaction
                     .add(R.id.activity_fragment_container, taggedFragment, RECIPE_INGREDIENT_STEP_FRAGMENT)
                     .addToBackStack(RECIPE_LIST_STATE);
+
+            if (mIsTablet){
+
+            }
         } else {
             fragmentTransaction.show(taggedFragment);
         }

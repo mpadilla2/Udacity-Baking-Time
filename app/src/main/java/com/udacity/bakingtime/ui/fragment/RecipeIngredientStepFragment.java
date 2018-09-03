@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +30,7 @@ import java.util.Objects;
 
 public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
-    private static final String RECIPE_STEP_CONTENT_FRAGMENT = "recipe_step_content_fragment";
+    private static final String RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
     private static final String RECIPE_INGREDIENT_STEP_STATE = "recipe_ingredient_step_step";
 
     private RecipeViewModel mRecipeViewModel;
@@ -65,6 +66,18 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_ingredient_step, container, false);
+
+        Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
+        // Reference: https://stackoverflow.com/q/42502519/10151438
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         mIngredientsTextView = view.findViewById(R.id.recipe_ingredients_textview);
 
@@ -136,12 +149,12 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Fragment taggedFragment = fragmentManager.findFragmentByTag(RECIPE_STEP_CONTENT_FRAGMENT);
+        Fragment taggedFragment = fragmentManager.findFragmentByTag(RECIPE_DETAIL_FRAGMENT);
 
         if (taggedFragment == null){
-            taggedFragment = RecipeStepContentFragment.newInstance();
+            taggedFragment = RecipeDetailFragment.newInstance();
             fragmentTransaction
-                    .add(R.id.activity_fragment_container, taggedFragment, RECIPE_STEP_CONTENT_FRAGMENT)
+                    .add(R.id.activity_fragment_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
                     .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
         } else {
             fragmentTransaction.show(taggedFragment);

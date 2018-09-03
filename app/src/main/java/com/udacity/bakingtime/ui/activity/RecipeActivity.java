@@ -13,21 +13,39 @@ import android.util.Log;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
+import java.util.Objects;
 
-// Wednesday
-// Todo - Bug white space above exoplayer in both portrait and landscape
-// Todo - Bug split the screen correctly between exoplayer and other content
-// Todo - Other content should not show in landscape, only exoplayer
-// Todo Exoplayer - rotation correctly continues the video at proper position
+// Todo - BUG app crashes if I navigate all the way down into recipe detail and then back to recipe list. Back navigation of the same works fine.
+/*
+    1. Click a Recipe > Recipe step shows
+	2. Click a Recipe Step > recipe detail shows
+	3. Click up navigation > Recipe Step shows
+	4. Click up navigation > App crashes
+
+    I think the RecipeDetailFragment is still lingering and so when I click up navigation in recipe step then it's actually clicking the recipedetailfragment up navigation
+
+	Process: com.udacity.bakingtime, PID: 28968
+    java.lang.NullPointerException: Attempt to invoke virtual method 'void android.support.v4.app.FragmentActivity.onBackPressed()' on a null object reference
+        at com.udacity.bakingtime.ui.fragment.RecipeDetailFragment$1.onClick(RecipeDetailFragment.java:57)
+        at android.view.View.performClick(View.java:5637)
+        at android.view.View$PerformClick.run(View.java:22429)
+        at android.os.Handler.handleCallback(Handler.java:751)
+        at android.os.Handler.dispatchMessage(Handler.java:95)
+        at android.os.Looper.loop(Looper.java:154)
+        at android.app.ActivityThread.main(ActivityThread.java:6119)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:886)
+        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:776)
 
 
-// Thursday
-// Todo proper network check before grabbing info - use intent service this time!
+ */
 
+// Todo - If I am in landscape and I click a recipe step that has no video the text displays fine.
+// Todo - If I am in landscape and viewing a video then pull the navigation tools down, the textview displays and shows "no video" in addition to the video showing.
 
-// Friday
-// Todo add homescreen widget that displays ingredient list for selected recipe
-
+// Todo - proper network check before grabbing info - use intent service this time!
+// Todo - add homescreen widget that displays ingredient list for selected recipe
+// Todo - Add to Widget in the app itself in an already selected recipe
 
 // Saturday
 // Todo Espresso tests of the UI
@@ -41,22 +59,19 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 // Todo review rubric, mocks to see if missed anything
 
 
-// Test: onactivitycreated contains:
-//        code to populate recyclerview
-//        code to set the toolbar title
-//        this method fires every time I rotate the phone
-//        so why does the recyclerview populate sometimes but not others?
-//        why does the toolbar not get set again?
-
 public class RecipeActivity extends AppCompatActivity{
 
     private static final String RECIPE_LIST_FRAGMENT = "recipe_list_tag";
+    private Toolbar mToolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_recipe);
+
+        setUpToolbar();
 
         if (savedInstanceState != null){
             Log.d("RECIPEACTIVITY", "SAVEDINSTANCESTATE EXISTS");
@@ -68,6 +83,7 @@ public class RecipeActivity extends AppCompatActivity{
 
 
     private void loadRecipeList() {
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -91,9 +107,16 @@ public class RecipeActivity extends AppCompatActivity{
         super.onBackPressed();
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-            Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_activity_toolbar);
-            setSupportActionBar(toolbar);
-            toolbar.setTitle(getTitle());        }
+            setUpToolbar();
+            mToolbar.setTitle(getTitle());
+        }
+    }
+
+    private void setUpToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.recipe_activity_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
 }
 

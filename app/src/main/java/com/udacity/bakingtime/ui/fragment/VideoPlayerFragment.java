@@ -3,20 +3,24 @@ package com.udacity.bakingtime.ui.fragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -25,17 +29,34 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.model.Step;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
+import com.udacity.bakingtime.data.viewmodel.VideoPlayerViewModel;
 
 import java.util.Objects;
 
-import static com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_FILL;
-import static com.google.android.exoplayer2.ui.AspectRatioFrameLayout.RESIZE_MODE_FIT;
+// onpause
+// onsaveinstancestate
+// onstop
+// ondestroy
+// oncreate
+// onviewcreated
+// onactivitycreated
+// onstart
+// onresume
+
+
+// Todo - in portrait mode video playerview starts lower than the app bar leaving a white space on top
+// Todo - BUG when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially
+// under the controls and the toolbar doesn't display all the way. Also, if I click a step in this landscape mode the app crashes.
+// The navigation buttons also appear white
+// Todo - Exoplayer rotation needs to correctly continue the video at proper position
+
 
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
 // Other Reference: https://medium.com/fungjai/playing-video-by-exoplayer-b97903be0b33
@@ -47,13 +68,18 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private static final String PLAY_WHEN_READY = "play_when_ready";
 
     private RecipeViewModel mRecipeViewModel;
+    private VideoPlayerViewModel mVideoPlayerViewModel;
     private SimpleExoPlayer mExoPlayer;
     private PlayerView mPlayerView;
     private boolean mPlayWhenReady;
     private int mCurrentWindow;
     private long mPlayBackPosition;
     private String mMediaUrl;
-    private ImageView mImageView;
+    private String mThumbnailUrl;
+    private TextView mTextView;
+    boolean isLandscape;
+    View decorView;
+
 
     public static VideoPlayerFragment newInstance(){
         VideoPlayerFragment fragment = new VideoPlayerFragment();
@@ -61,6 +87,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -74,15 +101,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            mPlayBackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
-            mCurrentWindow = savedInstanceState.getInt(CURRENT_WINDOW_INDEX, 0);
-            mPlayWhenReady = savedInstanceState.getBoolean(PLAY_WHEN_READY, false);
-        } else {
-            mPlayBackPosition = 0;
-            mCurrentWindow = 0;
-            mPlayWhenReady = true;
-        }
+        Log.d("VideoPlayerFragment", "ONCREATE");
     }
 
 
@@ -91,28 +110,58 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        Log.d("VideoPlayerFragment", "ONCREATEVIEW");
+
+
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        decorView = getActivity().getWindow().getDecorView();
+
 
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
         final AppBarLayout appBarLayout = getActivity().findViewById(R.id.recipe_activity_app_bar);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
-        mImageView = view.findViewById(R.id.recipe_step_content_imageView);
+        mTextView = view.findViewById(R.id.recipe_step_content_textView);
 
-        if (isLandscape){
-            mPlayerView.setResizeMode(RESIZE_MODE_FILL);
-            appBarLayout.setVisibility(View.INVISIBLE);
+        if (isLandscape) {
+            hideSystemUI();
         } else {
-            //mPlayerView.setResizeMode(RESIZE_MODE_FIT);
-            appBarLayout.setVisibility(View.VISIBLE);
+            showSystemUI();
         }
+
+        // Reference: https://developer.android.com/training/system-ui/visibility
+        decorView.setOnSystemUiVisibilityChangeListener
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        // Note that system bars will only be "visible" if none of the
+                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            appBarLayout.setVisibility(View.VISIBLE);
+                            mTextView.setVisibility(View.VISIBLE);
+                            mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+                        } else {
+                            appBarLayout.setVisibility(View.GONE);
+                            mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+                        }
+                    }
+                });
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.d("VideoPlayerFragment", "ONSTART");
+
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Log.d("VideoPlayerFragment", "ONACTIVITYCREATED");
 
         setUpViewModel();
         loadRecipeStepContent();
@@ -122,29 +171,17 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private void setUpViewModel(){
         mRecipeViewModel = ViewModelProviders.of(
                 Objects.requireNonNull(getActivity())).get(RecipeViewModel.class);
-    }
 
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        // We've already stored necessary exoplayer state in variables, released exoplayer and set it to null.
-        if (mExoPlayer != null){
-            mPlayBackPosition = mExoPlayer.getCurrentPosition();
-            mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
-            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
-
-            outState.putLong(PLAYBACK_POSITION, mPlayBackPosition);
-            outState.putInt(CURRENT_WINDOW_INDEX, mCurrentWindow);
-            outState.putBoolean(PLAY_WHEN_READY, mPlayWhenReady);
-        }
+        mVideoPlayerViewModel = ViewModelProviders.of(
+                Objects.requireNonNull(getActivity())).get(VideoPlayerViewModel.class);
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d("VideoPlayerFragment", "ONPAUSE");
+
         releasePlayer();
     }
 
@@ -152,6 +189,8 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.d("VideoPlayerFragment", "ONRESUME");
 
         if (!mMediaUrl.isEmpty() && mPlayBackPosition > 0 && mExoPlayer != null){
             loadRecipeStepContent();
@@ -164,8 +203,35 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d("VideoPlayerFragment", "ONSTOP");
 
         releasePlayer();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Log.d("VideoPlayerFragment", "ONSAVEINSTANCESTATE");
+
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        Log.d("VideoPlayerFragment", "ONDESTROY");
+
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.d("VideoPlayerFragment", "ONVIEWCREATED");
     }
 
 
@@ -174,83 +240,49 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         final Observer<Step> stepObserver = new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
-                if (mExoPlayer != null){
+
+                mMediaUrl = "";
+                mThumbnailUrl = "";
+
+                if (mExoPlayer != null) {
                     releasePlayer();
                 }
-                // set the mediaUrl for the selected recipe
-                if (step.getVideoURL().isEmpty()){
-                    if (step.getThumbnailURL().isEmpty()){
-                        mMediaUrl = "";
-                    } else {
-                        mMediaUrl = step.getThumbnailURL();
-                    }
-                } else {
+
+                if (!step.getVideoURL().isEmpty()) {
                     mMediaUrl = step.getVideoURL();
                 }
 
-                setUpImageAndPlayerViews();
+                if (!step.getThumbnailURL().isEmpty()){
+                    mThumbnailUrl = step.getThumbnailURL();
+                }
 
-                Log.d("Mediaurl", "contains: " + mMediaUrl);
+                if (mMediaUrl.isEmpty()){
+                    mPlayerView.setVisibility(View.GONE);
+                    mTextView.setVisibility(View.VISIBLE);
+                } else {
+                    mTextView.setVisibility(View.GONE);
+                    mPlayerView.setVisibility(View.VISIBLE);
+
+                    Glide.with(getContext())
+                            .asBitmap()
+                            .load(mThumbnailUrl)
+                            .apply(new RequestOptions().fitCenter())
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    mPlayerView.setDefaultArtwork(resource);
+                                }
+                            });
+
+                    preparePlayerAndMedia();
+                }
             }
         };
+
         mRecipeViewModel.getSelectedRecipeStep()
                 .observe(Objects.requireNonNull(getViewLifecycleOwner()), stepObserver);
     }
 
-
-    private void setUpImageAndPlayerViews(){
-
-        if (!mMediaUrl.isEmpty()){
-            String type = getMimeType(mMediaUrl);
-
-            if (!type.isEmpty()){
-                switch (type){
-                    case "image":
-                        setViewsWhenImage();
-                        break;
-                    case "video":
-                        preparePlayerAndMedia();
-                        setViewsWhenVideo();
-                        break;
-                    default:
-                        setViewsWhenNoImageOrVideo();
-                        break;
-                }
-            }
-        } else {
-            Log.d("Mediaurl", "is empty!");
-            setViewsWhenNoImageOrVideo();
-        }
-    }
-
-
-    // Reference: https://stackoverflow.com/questions/8589645/how-to-determine-mime-type-of-file-in-android
-    @NonNull
-    private static String getMimeType(String url) {
-        String type;
-        String ext = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (ext != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-            if (type != null){
-                type = type.split("/")[0];
-            } else {
-                type = "";
-            }
-        } else {
-            type = "";
-        }
-        return type;
-    }
-
-
-    private void setViewsWhenImage() {
-        Glide.with(this)
-                .load(mMediaUrl)
-                .apply(new RequestOptions().optionalCenterCrop())
-                .into(mImageView);
-        mPlayerView.setVisibility(View.GONE);
-        mImageView.setVisibility(View.VISIBLE);
-    }
 
 
     private void preparePlayerAndMedia(){
@@ -264,20 +296,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         MediaSource mediaSource = new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory(userAgent))
                 .createMediaSource(Uri.parse(mMediaUrl));
-        mExoPlayer.prepare(mediaSource, true, false);
-    }
-
-
-    private void setViewsWhenVideo(){
-        mPlayerView.setVisibility(View.VISIBLE);
-        mImageView.setVisibility(View.GONE);
-    }
-
-
-    private void setViewsWhenNoImageOrVideo() {
-        mImageView.setImageResource(R.drawable.no_video_available_transparent_bg);
-        mPlayerView.setVisibility(View.GONE);
-        mImageView.setVisibility(View.VISIBLE);
+        mExoPlayer.prepare(mediaSource);
     }
 
 
@@ -296,18 +315,45 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         mPlayerView.setPlayer(mExoPlayer);
         mExoPlayer.setPlayWhenReady(mPlayWhenReady);
         mExoPlayer.seekTo(mCurrentWindow, mPlayBackPosition);
-        mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        //mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
 
+    // todo values are incorrectly at 0,0, and false
     private void releasePlayer(){
         if (mExoPlayer != null){
-            mPlayBackPosition = mExoPlayer.getCurrentPosition();
-            mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
-            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+
+            mVideoPlayerViewModel.setCurrentWindow(mExoPlayer.getCurrentWindowIndex());
+            mVideoPlayerViewModel.setPlayBackPosition(mExoPlayer.getContentPosition());
+            mVideoPlayerViewModel.setPlayWhenReady(mExoPlayer.getPlayWhenReady());
+            mVideoPlayerViewModel.setMediaUrl(mMediaUrl);
+
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
         }
+    }
+
+
+    private void hideSystemUI() {
+        // Enables regular "immersive" mode.
+        // Reference: https://developer.android.com/training/system-ui/immersive
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                // Set the content to appear under the system bars so that the
+                // content doesn't resize when the system bars hide and show.
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                // Hide the nav bar and status bar
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+
+    // Shows the system bars by removing all the flags
+    // except for the ones that make the content appear under the system bars.
+    private void showSystemUI() {
+        //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 }
