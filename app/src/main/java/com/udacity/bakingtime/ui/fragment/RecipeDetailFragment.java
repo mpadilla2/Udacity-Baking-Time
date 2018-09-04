@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
 
     FrameLayout recipeInstructionsFrameLayout;
     boolean isLandscape;
+    private boolean mIsTwoPaneLayout = false;
+
 
     public static RecipeDetailFragment newInstance(){
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -67,7 +70,11 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
 
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
 
-        if (!isLandscape) {
+        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
+            mIsTwoPaneLayout = true;
+        }
+
+        if (!isLandscape || mIsTwoPaneLayout) {
             recipeInstructionsFrameLayout = view.findViewById(R.id.recipe_step_instructions_fragment);
         }
 
@@ -107,9 +114,9 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
         }
 
 
-        if (!isLandscape){
+        if (!isLandscape || mIsTwoPaneLayout){
 
-            if (recipeInstructionsFrameLayout.getVisibility() == View.GONE){
+            if ((recipeInstructionsFrameLayout.getVisibility() == View.GONE) || mIsTwoPaneLayout){
                 recipeInstructionsFrameLayout.setVisibility(View.VISIBLE);
             }
 

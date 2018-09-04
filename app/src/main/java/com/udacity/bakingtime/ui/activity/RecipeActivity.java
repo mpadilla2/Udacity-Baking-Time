@@ -15,6 +15,13 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
 import java.util.Objects;
 
+// Todo - in Tablet mode, if I rotate from portrait to landscape, I have no toolbar available and everything goes to fullscreen; still need toolbar
+// Todo - in Tablet mode, need to keep the toolbar saying Baking App and not the recipe name; also no up navigation
+// Todo - in portrait mode video playerview starts lower than the app bar leaving a white space on top
+// Todo - BUG when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially
+// under the controls and the toolbar doesn't display all the way. Also, if I click a step in this landscape mode the app crashes.
+// The navigation buttons also appear white
+// Todo - Exoplayer rotation needs to correctly continue the video at proper position
 // Todo - BUG app crashes if I navigate all the way down into recipe detail and then back to recipe list. Back navigation of the same works fine.
 /*
     1. Click a Recipe > Recipe step shows
@@ -36,24 +43,19 @@ import java.util.Objects;
         at java.lang.reflect.Method.invoke(Native Method)
         at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:886)
         at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:776)
-
-
  */
 
-// Todo - If I am in landscape and I click a recipe step that has no video the text displays fine.
 // Todo - If I am in landscape and viewing a video then pull the navigation tools down, the textview displays and shows "no video" in addition to the video showing.
 
 // Todo - proper network check before grabbing info - use intent service this time!
 // Todo - add homescreen widget that displays ingredient list for selected recipe
 // Todo - Add to Widget in the app itself in an already selected recipe
 
-// Saturday
 // Todo Espresso tests of the UI
 // Todo format ingredients display text to be similar to recyclerview text display
 // Todo set up tablet views after phone views are finished
 
 
-// Sunday
 // Todo extract all dimensions, strings
 // Todo clean code
 // Todo review rubric, mocks to see if missed anything

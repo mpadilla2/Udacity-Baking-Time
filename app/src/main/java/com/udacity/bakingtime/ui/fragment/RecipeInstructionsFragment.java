@@ -20,15 +20,12 @@ import java.util.Objects;
 
 public class RecipeInstructionsFragment extends ViewLifecycleFragment {
 
-    // todo checking tablet mode to set views visible/gone or visible
-    // todo - view.SYSTEM_UI_FLAG_FULLSCREEN reference: https://developer.android.com/training/system-ui/immersive
-
-
     private RecipeViewModel mRecipeViewModel;
     private TextView mStepInstructions;
     private Button mPreviousButton;
     private Button mNextButton;
     boolean isLandscape;
+    private boolean mIsTwoPaneLayout;
 
 
     public static RecipeInstructionsFragment newInstance(){
@@ -59,6 +56,11 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_recipe_instructions, container, false);
+
+        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
+            mIsTwoPaneLayout = true;
+        }
+
         mStepInstructions = view.findViewById(R.id.recipe_step_instructions_textView);
         mPreviousButton = view.findViewById(R.id.recipe_step_content_previous_button);
         mNextButton = view.findViewById(R.id.recipe_step_content_next_button);
@@ -75,12 +77,24 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
 
         setUpViewModel();
 
-        if (isLandscape){
-            setUpViewsInLandscape();
-        } else {
-            setUpViewsInPortrait();
+        if (isLandscape && !mIsTwoPaneLayout){
+            mPreviousButton.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.GONE);
+            mStepInstructions.setVisibility(View.GONE);
+        }
+
+        if (!isLandscape && !mIsTwoPaneLayout){
+            mStepInstructions.setVisibility(View.VISIBLE);
+            mPreviousButton.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
             setupButtonClickListeners();
             loadButtonObservers();
+        }
+
+        if (mIsTwoPaneLayout){
+            mStepInstructions.setVisibility(View.VISIBLE);
+            mPreviousButton.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.GONE);
         }
 
         loadRecipeStepContent();
@@ -98,7 +112,7 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
         final Observer<Step> stepObserver = new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
-                if (!isLandscape) {
+                if (!isLandscape || mIsTwoPaneLayout) {
                     mStepInstructions.setText(Objects.requireNonNull(step).getDescription());
                 }
             }
@@ -156,19 +170,5 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
                 mRecipeViewModel.getNextRecipeStep();
             }
         });
-    }
-
-
-    private void setUpViewsInLandscape(){
-        mPreviousButton.setVisibility(View.GONE);
-        mNextButton.setVisibility(View.GONE);
-        mStepInstructions.setVisibility(View.GONE);
-    }
-
-
-    private void setUpViewsInPortrait(){
-        mPreviousButton.setVisibility(View.VISIBLE);
-        mNextButton.setVisibility(View.VISIBLE);
-        mStepInstructions.setVisibility(View.VISIBLE);
     }
 }

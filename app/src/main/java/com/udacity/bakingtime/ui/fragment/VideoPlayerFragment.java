@@ -40,6 +40,7 @@ import com.udacity.bakingtime.data.viewmodel.VideoPlayerViewModel;
 
 import java.util.Objects;
 
+
 // onpause
 // onsaveinstancestate
 // onstop
@@ -51,11 +52,6 @@ import java.util.Objects;
 // onresume
 
 
-// Todo - in portrait mode video playerview starts lower than the app bar leaving a white space on top
-// Todo - BUG when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially
-// under the controls and the toolbar doesn't display all the way. Also, if I click a step in this landscape mode the app crashes.
-// The navigation buttons also appear white
-// Todo - Exoplayer rotation needs to correctly continue the video at proper position
 
 
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
@@ -79,6 +75,8 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private TextView mTextView;
     boolean isLandscape;
     View decorView;
+    private boolean mIsTwoPaneLayout;
+
 
 
     public static VideoPlayerFragment newInstance(){
@@ -102,6 +100,10 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         super.onCreate(savedInstanceState);
 
         Log.d("VideoPlayerFragment", "ONCREATE");
+
+        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
+            mIsTwoPaneLayout = true;
+        }
     }
 
 
@@ -122,29 +124,31 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
         mTextView = view.findViewById(R.id.recipe_step_content_textView);
 
-        if (isLandscape) {
-            hideSystemUI();
-        } else {
-            showSystemUI();
-        }
+        if (!mIsTwoPaneLayout) {
+            if (isLandscape) {
+                hideSystemUI();
+            } else {
+                showSystemUI();
+            }
 
-        // Reference: https://developer.android.com/training/system-ui/visibility
-        decorView.setOnSystemUiVisibilityChangeListener
-                (new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        // Note that system bars will only be "visible" if none of the
-                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                            appBarLayout.setVisibility(View.VISIBLE);
-                            mTextView.setVisibility(View.VISIBLE);
-                            mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
-                        } else {
-                            appBarLayout.setVisibility(View.GONE);
-                            mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+            // Reference: https://developer.android.com/training/system-ui/visibility
+            decorView.setOnSystemUiVisibilityChangeListener
+                    (new View.OnSystemUiVisibilityChangeListener() {
+                        @Override
+                        public void onSystemUiVisibilityChange(int visibility) {
+                            // Note that system bars will only be "visible" if none of the
+                            // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                                appBarLayout.setVisibility(View.VISIBLE);
+                                mTextView.setVisibility(View.VISIBLE);
+                                mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
+                            } else {
+                                appBarLayout.setVisibility(View.GONE);
+                                mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+                            }
                         }
-                    }
-                });
+                    });
+        }
 
         return view;
     }

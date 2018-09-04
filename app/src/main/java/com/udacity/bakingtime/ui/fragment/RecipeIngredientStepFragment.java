@@ -37,6 +37,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     private RecipeStepAdapter mRecipeStepAdapter;
     private List<Step> mRecipeStepList = new ArrayList<>();
     private TextView mIngredientsTextView;
+    private boolean mIsTwoPaneLayout = false;
 
 
     public static RecipeIngredientStepFragment newInstance(){
@@ -65,7 +66,13 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_recipe_ingredient_step, container, false);
+
+        if (view.findViewById(R.id.item_detail_container) != null) {
+            mIsTwoPaneLayout = true;
+            Log.d("mIsTwoPaneLayout", "is: " + mIsTwoPaneLayout);
+        }
 
         Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
         // Reference: https://stackoverflow.com/q/42502519/10151438
@@ -151,22 +158,34 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         Fragment taggedFragment = fragmentManager.findFragmentByTag(RECIPE_DETAIL_FRAGMENT);
 
-        if (taggedFragment == null){
-            taggedFragment = RecipeDetailFragment.newInstance();
-            fragmentTransaction
-                    .add(R.id.activity_fragment_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
-                    .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
+        if (mIsTwoPaneLayout){
+            // large screen
+            if (taggedFragment == null) {
+                taggedFragment = RecipeDetailFragment.newInstance();
+                fragmentTransaction.add(R.id.item_detail_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
+                        .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
+            } else {
+                fragmentTransaction.show(taggedFragment);
+            }
+
         } else {
-            fragmentTransaction.show(taggedFragment);
-        }
+            if (taggedFragment == null) {
+                taggedFragment = RecipeDetailFragment.newInstance();
+                fragmentTransaction.add(R.id.activity_fragment_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
+                        .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
+            } else {
+                fragmentTransaction.show(taggedFragment);
+            }
 
-        List<Fragment> fragmentList = fragmentManager.getFragments();
+            List<Fragment> fragmentList = fragmentManager.getFragments();
 
-        for (Fragment fragment : fragmentList){
-            if (!fragment.equals(taggedFragment) && fragment.isVisible()){
-                fragmentTransaction.hide(fragment);
+            for (Fragment fragment : fragmentList) {
+                if (!fragment.equals(taggedFragment) && fragment.isVisible()) {
+                    fragmentTransaction.hide(fragment);
+                }
             }
         }
+
         fragmentTransaction.commit();
     }
 }

@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tablet_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:showDividers="middle"
     android:baselineAligned="false"
-    android:divider="?android:attr/dividerHorizontal"
-    android:orientation="horizontal"
-    android:showDividers="middle">
+    android:orientation="horizontal">
 
-    <FrameLayout
-        android:id="@+id/activity_fragment_container"
-        android:name="FragmentContainer"
-        android:layout_width="0dp"
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recipe_ingredient_step_nestedscrollview"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/recipe_activity_app_bar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-    </FrameLayout>
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_weight="1">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="?android:attr/listDivider" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/recipe_ingredient_step_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:descendantFocusability="blocksDescendants">
+
+            <include
+                android:id="@+id/ingredient_steps"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/merge_ingredient_steps"/>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <FrameLayout
         android:id="@+id/item_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_weight="3"/>
+</LinearLayout>
+
+<!--
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="?android:attr/listDivider" />-->
