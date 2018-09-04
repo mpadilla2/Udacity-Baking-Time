@@ -9,10 +9,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.adapter.RecipeAdapter;
@@ -32,19 +34,15 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     private static final String RECIPE_INGREDIENT_STEP_FRAGMENT = "recipe_ingredient_step_fragment";
     private static final String RECIPE_LIST_STATE = "recipe_list_state";
 
-    private int mColumnCount = 3;
+    private int mColumnCount;
     private List<Recipe> mRecipeList = new ArrayList<>();
     private RecipeViewModel mRecipeViewModel;
     private RecipeAdapter mRecipeAdapter;
     private boolean mIsLargeScreen;
 
 
-    public static RecipeListFragment newInstance(int columnCount){
-        RecipeListFragment fragment = new RecipeListFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
+    public static RecipeListFragment newInstance(){
+        return new RecipeListFragment();
     }
 
 
@@ -59,10 +57,6 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null){
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
 
@@ -87,9 +81,20 @@ public class RecipeListFragment extends ViewLifecycleFragment {
             }
         });
 
+        RecyclerView.LayoutManager layoutManager;
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.list_layout_margin);
-        recyclerView.addItemDecoration(new RecyclerViewItemDecoration(1, spacingInPixels, true, 0));
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), mColumnCount));
+
+
+        if (mIsLargeScreen){
+            mColumnCount = 3;
+            layoutManager = new GridLayoutManager(getActivity(), mColumnCount);
+            recyclerView.addItemDecoration(new RecyclerViewItemDecoration(mColumnCount, spacingInPixels, true, 0));
+        } else {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            recyclerView.addItemDecoration(new RecyclerViewItemDecoration(1, spacingInPixels, true, 0));
+        }
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mRecipeAdapter);
 
         return view;

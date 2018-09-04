@@ -316,7 +316,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     }
 
 
-    // todo values are incorrectly at 0,0, and false
     private void releasePlayer(){
         if (mExoPlayer != null){
 

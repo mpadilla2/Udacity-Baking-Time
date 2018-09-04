@@ -15,13 +15,15 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
 import java.util.Objects;
 
-// Todo - in Tablet mode, if I rotate from portrait to landscape, I have no toolbar available and everything goes to fullscreen; still need toolbar
-// Todo - in Tablet mode, need to keep the toolbar saying Baking App and not the recipe name; also no up navigation
-// Todo - in portrait mode video playerview starts lower than the app bar leaving a white space on top
+// Todo - BUG If I am in landscape and viewing a video then pull the navigation tools down, the textview displays and shows "no video" in addition to the video showing.
+// Todo - BUG in Tablet mode, if I back press while on a step, it doesn't return to recipe list, instead the step detail disappears.
+// Todo - BUG in Tablet mode, if I rotate from portrait to landscape, I have no toolbar available and everything goes to fullscreen; still need toolbar
+// Todo - BUG in Tablet mode, need to keep the toolbar saying Baking App and not the recipe name; also no up navigation
+// Todo - BUG in portrait mode video playerview starts lower than the app bar leaving a white space on top
 // Todo - BUG when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially
 // under the controls and the toolbar doesn't display all the way. Also, if I click a step in this landscape mode the app crashes.
 // The navigation buttons also appear white
-// Todo - Exoplayer rotation needs to correctly continue the video at proper position
+// Todo - BUG Exoplayer rotation needs to correctly continue the video at proper position
 // Todo - BUG app crashes if I navigate all the way down into recipe detail and then back to recipe list. Back navigation of the same works fine.
 /*
     1. Click a Recipe > Recipe step shows
@@ -45,7 +47,6 @@ import java.util.Objects;
         at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:776)
  */
 
-// Todo - If I am in landscape and viewing a video then pull the navigation tools down, the textview displays and shows "no video" in addition to the video showing.
 
 // Todo - proper network check before grabbing info - use intent service this time!
 // Todo - add homescreen widget that displays ingredient list for selected recipe
@@ -93,7 +94,7 @@ public class RecipeActivity extends AppCompatActivity{
 
         // Not adding first fragment to backstack because I want the app to exit onbackpress with last fragment.
         if (taggedFragment == null) {
-            RecipeListFragment recipeListFragment = RecipeListFragment.newInstance(1);
+            RecipeListFragment recipeListFragment = RecipeListFragment.newInstance();
             fragmentTransaction
                     .add(R.id.activity_fragment_container, recipeListFragment, RECIPE_LIST_FRAGMENT);
         } else {
