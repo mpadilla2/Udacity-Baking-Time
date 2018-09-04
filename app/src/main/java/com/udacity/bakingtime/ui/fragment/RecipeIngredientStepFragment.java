@@ -72,17 +72,19 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
         mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
 
-        Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
-        // Reference: https://stackoverflow.com/q/42502519/10151438
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        if (!mIsLargeScreen) {
+            Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
+            // Reference: https://stackoverflow.com/q/42502519/10151438
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
         mIngredientsTextView = view.findViewById(R.id.recipe_ingredients_textview);
 
@@ -104,7 +106,10 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         setUpViewModel();
         loadRecipeSteps();
         loadIngredients();
-        setToolBarTitle();
+
+        if (!mIsLargeScreen) {
+            setToolBarTitle();
+        }
 
         Log.d("INGREDIENTSTEPFRAGMENT", "ONACTIVITYCREATED FIRED");
     }
@@ -157,21 +162,18 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         Fragment taggedFragment = fragmentManager.findFragmentByTag(RECIPE_DETAIL_FRAGMENT);
 
         if (mIsLargeScreen){
-            // large screen
-            if (taggedFragment == null) {
-                taggedFragment = RecipeDetailFragment.newInstance();
-                fragmentTransaction.add(R.id.item_detail_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
-                        .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
-            } else {
-                fragmentTransaction.show(taggedFragment);
-            }
 
+            taggedFragment = RecipeDetailFragment.newInstance();
+            fragmentTransaction.replace(R.id.item_detail_container, taggedFragment, RECIPE_DETAIL_FRAGMENT);
         } else {
+
             if (taggedFragment == null) {
+
                 taggedFragment = RecipeDetailFragment.newInstance();
                 fragmentTransaction.add(R.id.activity_fragment_container, taggedFragment, RECIPE_DETAIL_FRAGMENT)
                         .addToBackStack(RECIPE_INGREDIENT_STEP_STATE);
             } else {
+
                 fragmentTransaction.show(taggedFragment);
             }
 

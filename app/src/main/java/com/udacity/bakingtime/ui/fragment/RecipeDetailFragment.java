@@ -69,18 +69,6 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
             recipeInstructionsFrameLayout = view.findViewById(R.id.recipe_step_instructions_fragment);
         }
 
-        Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
-        // Reference: https://stackoverflow.com/q/42502519/10151438
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
         launchRecipeDetailFragments();
 
         return view;
