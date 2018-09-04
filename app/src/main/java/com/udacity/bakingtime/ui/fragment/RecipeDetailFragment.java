@@ -1,21 +1,14 @@
 package com.udacity.bakingtime.ui.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.constraint.Guideline;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +16,6 @@ import android.widget.FrameLayout;
 
 import com.udacity.bakingtime.R;
 
-import java.util.List;
 import java.util.Objects;
 
 public class RecipeDetailFragment extends ViewLifecycleFragment {
@@ -36,7 +28,7 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
 
     FrameLayout recipeInstructionsFrameLayout;
     boolean isLandscape;
-    private boolean mIsTwoPaneLayout = false;
+    private boolean mIsLargeScreen = false;
 
 
     public static RecipeDetailFragment newInstance(){
@@ -66,15 +58,14 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
 
-        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
-            mIsTwoPaneLayout = true;
-        }
+        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if (!isLandscape || mIsTwoPaneLayout) {
+        // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
+        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
+
+        if (!isLandscape || mIsLargeScreen) {
             recipeInstructionsFrameLayout = view.findViewById(R.id.recipe_step_instructions_fragment);
         }
 
@@ -114,9 +105,9 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
         }
 
 
-        if (!isLandscape || mIsTwoPaneLayout){
+        if (!isLandscape || mIsLargeScreen){
 
-            if ((recipeInstructionsFrameLayout.getVisibility() == View.GONE) || mIsTwoPaneLayout){
+            if ((recipeInstructionsFrameLayout.getVisibility() == View.GONE) || mIsLargeScreen){
                 recipeInstructionsFrameLayout.setVisibility(View.VISIBLE);
             }
 

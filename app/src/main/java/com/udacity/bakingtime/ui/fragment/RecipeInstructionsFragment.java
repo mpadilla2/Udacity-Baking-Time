@@ -25,7 +25,7 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
     private Button mPreviousButton;
     private Button mNextButton;
     boolean isLandscape;
-    private boolean mIsTwoPaneLayout;
+    private boolean mIsLargeScreen;
 
 
     public static RecipeInstructionsFragment newInstance(){
@@ -57,9 +57,8 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
 
         View view = inflater.inflate(R.layout.fragment_recipe_instructions, container, false);
 
-        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
-            mIsTwoPaneLayout = true;
-        }
+        // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
+        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
 
         mStepInstructions = view.findViewById(R.id.recipe_step_instructions_textView);
         mPreviousButton = view.findViewById(R.id.recipe_step_content_previous_button);
@@ -77,13 +76,13 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
 
         setUpViewModel();
 
-        if (isLandscape && !mIsTwoPaneLayout){
+        if (isLandscape && !mIsLargeScreen){
             mPreviousButton.setVisibility(View.GONE);
             mNextButton.setVisibility(View.GONE);
             mStepInstructions.setVisibility(View.GONE);
         }
 
-        if (!isLandscape && !mIsTwoPaneLayout){
+        if (!isLandscape && !mIsLargeScreen){
             mStepInstructions.setVisibility(View.VISIBLE);
             mPreviousButton.setVisibility(View.VISIBLE);
             mNextButton.setVisibility(View.VISIBLE);
@@ -91,7 +90,7 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
             loadButtonObservers();
         }
 
-        if (mIsTwoPaneLayout){
+        if (mIsLargeScreen){
             mStepInstructions.setVisibility(View.VISIBLE);
             mPreviousButton.setVisibility(View.GONE);
             mNextButton.setVisibility(View.GONE);
@@ -112,7 +111,7 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
         final Observer<Step> stepObserver = new Observer<Step>() {
             @Override
             public void onChanged(@Nullable Step step) {
-                if (!isLandscape || mIsTwoPaneLayout) {
+                if (!isLandscape || mIsLargeScreen) {
                     mStepInstructions.setText(Objects.requireNonNull(step).getDescription());
                 }
             }

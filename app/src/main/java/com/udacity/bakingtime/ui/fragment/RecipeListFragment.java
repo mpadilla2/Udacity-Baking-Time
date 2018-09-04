@@ -8,15 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.adapter.RecipeAdapter;
@@ -40,6 +36,7 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     private List<Recipe> mRecipeList = new ArrayList<>();
     private RecipeViewModel mRecipeViewModel;
     private RecipeAdapter mRecipeAdapter;
+    private boolean mIsLargeScreen;
 
 
     public static RecipeListFragment newInstance(int columnCount){
@@ -75,6 +72,9 @@ public class RecipeListFragment extends ViewLifecycleFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+
+        // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
+        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
 
         RecyclerView recyclerView = view.findViewById(R.id.recipe_recyclerview);
 

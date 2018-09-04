@@ -8,20 +8,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -52,8 +49,6 @@ import java.util.Objects;
 // onresume
 
 
-
-
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
 // Other Reference: https://medium.com/fungjai/playing-video-by-exoplayer-b97903be0b33
 // Other Reference: https://android.jlelse.eu/android-exoplayer-starters-guide-6350433f256c
@@ -75,7 +70,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private TextView mTextView;
     boolean isLandscape;
     View decorView;
-    private boolean mIsTwoPaneLayout;
+    private boolean mIsLargeScreen;
 
 
 
@@ -101,9 +96,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
 
         Log.d("VideoPlayerFragment", "ONCREATE");
 
-        if (Objects.requireNonNull(getActivity()).findViewById(R.id.item_detail_container) != null) {
-            mIsTwoPaneLayout = true;
-        }
     }
 
 
@@ -114,17 +106,18 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
 
         Log.d("VideoPlayerFragment", "ONCREATEVIEW");
 
-
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        decorView = getActivity().getWindow().getDecorView();
 
+        // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
+        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
+        decorView = getActivity().getWindow().getDecorView();
 
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
         final AppBarLayout appBarLayout = getActivity().findViewById(R.id.recipe_activity_app_bar);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
         mTextView = view.findViewById(R.id.recipe_step_content_textView);
 
-        if (!mIsTwoPaneLayout) {
+        if (!mIsLargeScreen) {
             if (isLandscape) {
                 hideSystemUI();
             } else {

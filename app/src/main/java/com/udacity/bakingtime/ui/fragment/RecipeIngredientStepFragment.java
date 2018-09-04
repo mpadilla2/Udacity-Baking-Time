@@ -37,7 +37,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     private RecipeStepAdapter mRecipeStepAdapter;
     private List<Step> mRecipeStepList = new ArrayList<>();
     private TextView mIngredientsTextView;
-    private boolean mIsTwoPaneLayout = false;
+    private boolean mIsLargeScreen = false;
 
 
     public static RecipeIngredientStepFragment newInstance(){
@@ -69,10 +69,8 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         View view = inflater.inflate(R.layout.fragment_recipe_ingredient_step, container, false);
 
-        if (view.findViewById(R.id.item_detail_container) != null) {
-            mIsTwoPaneLayout = true;
-            Log.d("mIsTwoPaneLayout", "is: " + mIsTwoPaneLayout);
-        }
+        // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
+        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
 
         Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
         // Reference: https://stackoverflow.com/q/42502519/10151438
@@ -158,7 +156,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         Fragment taggedFragment = fragmentManager.findFragmentByTag(RECIPE_DETAIL_FRAGMENT);
 
-        if (mIsTwoPaneLayout){
+        if (mIsLargeScreen){
             // large screen
             if (taggedFragment == null) {
                 taggedFragment = RecipeDetailFragment.newInstance();
