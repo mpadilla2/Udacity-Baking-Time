@@ -10,7 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -52,7 +54,7 @@ import java.util.Objects;
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
 // Other Reference: https://medium.com/fungjai/playing-video-by-exoplayer-b97903be0b33
 // Other Reference: https://android.jlelse.eu/android-exoplayer-starters-guide-6350433f256c
-public class VideoPlayerFragment extends ViewLifecycleFragment {
+public class VideoPlayerFragment extends ViewLifecycleFragment{
 
     private static final String PLAYBACK_POSITION = "playback_position";
     private static final String CURRENT_WINDOW_INDEX = "current_window_index";
@@ -69,7 +71,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private String mThumbnailUrl;
     private TextView mTextView;
     boolean isLandscape;
-    View decorView;
     private boolean mIsLargeScreen;
 
 
@@ -110,35 +111,30 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
 
         // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
         mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
-        decorView = getActivity().getWindow().getDecorView();
 
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
-        final AppBarLayout appBarLayout = getActivity().findViewById(R.id.recipe_activity_app_bar);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
         mTextView = view.findViewById(R.id.recipe_step_content_textView);
 
         if (!mIsLargeScreen) {
             if (isLandscape) {
                 hideSystemUI();
-            } else {
-                showSystemUI();
             }
 
             // Reference: https://developer.android.com/training/system-ui/visibility
-            decorView.setOnSystemUiVisibilityChangeListener
-                    (new View.OnSystemUiVisibilityChangeListener() {
+            mPlayerView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
                         @Override
                         public void onSystemUiVisibilityChange(int visibility) {
                             // Note that system bars will only be "visible" if none of the
                             // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
                             if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                //appBarLayout.setVisibility(View.VISIBLE);
+                                // System bars are visible
                                 if (mMediaUrl.isEmpty()) {
                                     mTextView.setVisibility(View.VISIBLE);
                                 }
                                 mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
                             } else {
-                                appBarLayout.setVisibility(View.GONE);
+                                // System bars are NOT visible
                                 mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
                             }
                         }
@@ -336,26 +332,13 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     private void hideSystemUI() {
         // Enables regular "immersive" mode.
         // Reference: https://developer.android.com/training/system-ui/immersive
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                // Set the content to appear under the system bars so that the
-                // content doesn't resize when the system bars hide and show.
+        mPlayerView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                // Hide the nav bar and status bar
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
-
-
-    private void showSystemUI() {
-       /* decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LOW_PROFILE);*/
-    }
-
-
-
 }

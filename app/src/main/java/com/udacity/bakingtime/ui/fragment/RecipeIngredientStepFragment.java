@@ -2,18 +2,20 @@ package com.udacity.bakingtime.ui.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.drm.DrmStore;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -71,21 +73,6 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
         mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
-
-        if (!mIsLargeScreen) {
-            Toolbar mToolbar = getActivity().findViewById(R.id.recipe_activity_toolbar);
-            // Reference: https://stackoverflow.com/q/42502519/10151438
-            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-            Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).setDisplayShowHomeEnabled(true);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().onBackPressed();
-                }
-            });
-        }
-
         mIngredientsTextView = view.findViewById(R.id.recipe_ingredients_textview);
 
         Context context = view.getContext();
@@ -108,7 +95,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         loadIngredients();
 
         if (!mIsLargeScreen) {
-            setToolBarTitle();
+            setActionBarTitle();
         }
 
         Log.d("INGREDIENTSTEPFRAGMENT", "ONACTIVITYCREATED FIRED");
@@ -146,10 +133,8 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     }
 
 
-    private void setToolBarTitle() {
-        Toolbar toolbar = (Toolbar) Objects.requireNonNull(getActivity())
-                .findViewById(R.id.recipe_activity_toolbar);
-        toolbar.setTitle(Objects.requireNonNull(
+    private void setActionBarTitle() {
+        Objects.requireNonNull(getActivity()).setTitle(Objects.requireNonNull(
                 mRecipeViewModel.getSelectedRecipe().getValue()).getName());
     }
 
