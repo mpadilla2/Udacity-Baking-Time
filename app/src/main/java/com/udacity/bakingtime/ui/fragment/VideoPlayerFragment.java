@@ -132,8 +132,10 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
                             // Note that system bars will only be "visible" if none of the
                             // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
                             if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                appBarLayout.setVisibility(View.VISIBLE);
-                                mTextView.setVisibility(View.VISIBLE);
+                                //appBarLayout.setVisibility(View.VISIBLE);
+                                if (mMediaUrl.isEmpty()) {
+                                    mTextView.setVisibility(View.VISIBLE);
+                                }
                                 mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
                             } else {
                                 appBarLayout.setVisibility(View.GONE);
@@ -347,9 +349,13 @@ public class VideoPlayerFragment extends ViewLifecycleFragment {
     }
 
 
-    // Shows the system bars by removing all the flags
-    // except for the ones that make the content appear under the system bars.
     private void showSystemUI() {
-        //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+       /* decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LOW_PROFILE);*/
     }
+
+
+
 }

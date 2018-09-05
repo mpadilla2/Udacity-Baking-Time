@@ -15,25 +15,20 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
 import java.util.Objects;
 
-// Todo - BUG If I am in landscape and viewing a video then pull the navigation tools down, the textview displays and shows "no video" in addition to the video showing.
+// Todo - format all text to be use Roboto and match material design guidelines
+// Todo - format margins, padding, borders to match mocks
 // Todo - BUG in portrait mode video playerview starts lower than the app bar leaving a white space on top
-// Todo - BUG when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially
-// under the controls and the toolbar doesn't display all the way. Also, if I click a step in this landscape mode the app crashes.
-// The navigation buttons also appear white
+// Todo - BUG phone when in landscape mode if I swipe to get the controls and then backpress, the recipe steps are hidden partially under the controls and appbar stays gone
 // Todo - BUG Exoplayer rotation needs to correctly continue the video at proper position
 
 // Todo - proper network check before grabbing info - use intent service this time!
 // Todo - add homescreen widget that displays ingredient list for selected recipe
 // Todo - Add to Widget in the app itself in an already selected recipe
 
-// Todo Espresso tests of the UI
-// Todo format ingredients display text to be similar to recyclerview text display
-// Todo set up tablet views after phone views are finished
-
-
-// Todo extract all dimensions, strings
-// Todo clean code
-// Todo review rubric, mocks to see if missed anything
+// Todo - Espresso tests of the UI
+// Todo - extract all dimensions, strings
+// Todo - clean code
+// Todo - review rubric, mocks to see if missed anything
 
 
 public class RecipeActivity extends AppCompatActivity{
