@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -72,6 +73,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     private TextView mTextView;
     boolean isLandscape;
     private boolean mIsLargeScreen;
+    private AppBarLayout mAppBarLayout;
 
 
 
@@ -115,31 +117,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         View view = inflater.inflate(R.layout.fragment_video_player, container, false);
         mPlayerView = view.findViewById(R.id.fragment_video_player_playerView);
         mTextView = view.findViewById(R.id.recipe_step_content_textView);
-
-        if (!mIsLargeScreen) {
-            if (isLandscape) {
-                hideSystemUI();
-            }
-
-            // Reference: https://developer.android.com/training/system-ui/visibility
-            mPlayerView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility) {
-                            // Note that system bars will only be "visible" if none of the
-                            // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                // System bars are visible
-                                if (mMediaUrl.isEmpty()) {
-                                    mTextView.setVisibility(View.VISIBLE);
-                                }
-                                mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH);
-                            } else {
-                                // System bars are NOT visible
-                                mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-                            }
-                        }
-                    });
-        }
+        mAppBarLayout = getActivity().findViewById(R.id.recipe_activity_app_bar);
 
         return view;
     }
@@ -157,6 +135,34 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         super.onActivityCreated(savedInstanceState);
 
         Log.d("VideoPlayerFragment", "ONACTIVITYCREATED");
+
+
+        if (!mIsLargeScreen) {
+
+            if (isLandscape) {
+                hideSystemUI();
+            }
+
+            // Reference: https://developer.android.com/training/system-ui/visibility
+            mPlayerView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    // Note that system bars will only be "visible" if none of the
+                    // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                        // System bars are visible
+                        if (mMediaUrl.isEmpty()) {
+                            mTextView.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        // System bars are NOT visible
+                        if (mAppBarLayout.getVisibility() == View.VISIBLE) {
+                            mAppBarLayout.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            });
+        }
 
         setUpViewModel();
         loadRecipeStepContent();
@@ -307,10 +313,11 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
                 new DefaultTrackSelector(),
                 new DefaultLoadControl());
 
+        mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
         mPlayerView.setPlayer(mExoPlayer);
         mExoPlayer.setPlayWhenReady(mPlayWhenReady);
         mExoPlayer.seekTo(mCurrentWindow, mPlayBackPosition);
-        //mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        mExoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
     }
 
 
@@ -330,14 +337,13 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
 
 
     private void hideSystemUI() {
-        // Enables regular "immersive" mode.
         // Reference: https://developer.android.com/training/system-ui/immersive
         mPlayerView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
