@@ -41,6 +41,7 @@ public class RecipeViewModel extends AndroidViewModel {
 
 
     public LiveData<Recipe> getSelectedRecipe(){
+
         return mSelectedRecipe;
     }
 
@@ -56,6 +57,11 @@ public class RecipeViewModel extends AndroidViewModel {
 
 
     public LiveData<Step> getSelectedRecipeStep(){
+
+        if (mSelectedRecipeStep.getValue().equals(null)){
+            setSelectedRecipeStep(Objects.requireNonNull(mSelectedRecipe.getValue()).getSteps().get(0));
+        }
+
         return mSelectedRecipeStep;
     }
 

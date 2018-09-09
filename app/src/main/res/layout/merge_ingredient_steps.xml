@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/recipe_ingredients_textview"
+        android:id="@+id/ingredients_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
@@ -13,7 +13,34 @@
         android:backgroundTint="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="@string/recipe_ingredients_textview"/>
+        android:text="@string/ingredients_label_text"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/recipe_ingredients_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/ingredients_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/recipe_ingredients_textview"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ddd"
+        app:layout_constraintTop_toBottomOf="@id/recipe_ingredients_textview"
+        app:layout_constraintBottom_toTopOf="@id/recipe_step_recyclerview"
+        />
 
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"

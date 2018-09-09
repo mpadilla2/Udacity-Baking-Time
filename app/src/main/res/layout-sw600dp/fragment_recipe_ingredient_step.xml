@@ -4,14 +4,16 @@
     android:id="@+id/tablet_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="?android:attr/listDivider"
     android:showDividers="middle"
+    android:dividerPadding="16dp"
     android:baselineAligned="false"
     android:orientation="horizontal">
 
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recipe_ingredient_step_nestedscrollview"
-        android:layout_width="200dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true"
@@ -41,8 +43,4 @@
 
 <!--
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="?android:attr/listDivider" />-->
+    -->

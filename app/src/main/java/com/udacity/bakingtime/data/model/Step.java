@@ -55,6 +55,11 @@ public class Step{
         this.description = description;
     }
 
+    public String getFormattedDescription(){
+        // Reference: https://stackoverflow.com/a/10272822
+        return "Step " + String.valueOf(getId()) + ". " + getDescription().substring(getDescription().indexOf(' ') + 1);
+    }
+
     public Step withDescription(String description) {
         this.description = description;
         return this;

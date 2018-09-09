@@ -31,8 +31,9 @@
         app:layout_constraintTop_toBottomOf="@id/recipe_activity_app_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@android:color/holo_blue_bright">
+        app:layout_constraintRight_toRightOf="parent">
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
+
+<!--FrameLayout android:background="@android:color/holo_blue_bright" -->

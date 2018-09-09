@@ -10,4 +10,5 @@
     <string name="widget_id_label">Widget ID</string>
     <string name="recipe_item_image">recipe item image</string>
     <string name="recipe_step_content_textView_text">No Video Available</string>
+    <string name="ingredients_label_text">Ingredients</string>
 </resources>

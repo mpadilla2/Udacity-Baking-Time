@@ -1,5 +1,6 @@
 package com.udacity.bakingtime.ui.fragment;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -92,6 +94,9 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.recipe_step_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        RecyclerView.ItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(mDividerItemDecoration);
 
         setUpRecipeStepAdapter();
         recyclerView.setAdapter(mRecipeStepAdapter);
@@ -107,10 +112,8 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         setUpViewModel();
         loadRecipeSteps();
         loadIngredients();
-
-        if (!mIsLargeScreen) {
-            setToolbarTitle();
-        }
+        setToolbarTitle();
+        //initRecipeStep();
 
         Log.d("INGREDIENTSTEPFRAGMENT", "ONACTIVITYCREATED FIRED");
     }
@@ -186,4 +189,13 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         fragmentTransaction.commit();
     }
+
+
+/*    private void initRecipeStep(){
+
+        if (mIsLargeScreen) {
+            mRecipeViewModel.setSelectedRecipeStep(mRecipeStepList.get(0));
+            launchRecipeStepContent();
+        }
+    }*/
 }

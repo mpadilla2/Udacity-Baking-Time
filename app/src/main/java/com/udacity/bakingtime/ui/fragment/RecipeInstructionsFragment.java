@@ -112,7 +112,13 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
             @Override
             public void onChanged(@Nullable Step step) {
                 if (!isLandscape || mIsLargeScreen) {
-                    mStepInstructions.setText(Objects.requireNonNull(step).getDescription());
+                    String description = Objects.requireNonNull(step).getDescription();
+
+                    if (step.getId() != 0) {
+                        description = step.getFormattedDescription();
+                    }
+
+                    mStepInstructions.setText(description);
                 }
             }
         };

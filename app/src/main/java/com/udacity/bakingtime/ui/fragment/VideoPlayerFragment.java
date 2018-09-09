@@ -1,5 +1,6 @@
 package com.udacity.bakingtime.ui.fragment;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
@@ -38,6 +39,7 @@ import com.udacity.bakingtime.data.model.Step;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 import com.udacity.bakingtime.data.viewmodel.VideoPlayerViewModel;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -61,6 +63,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     private static final String CURRENT_WINDOW_INDEX = "current_window_index";
     private static final String PLAY_WHEN_READY = "play_when_ready";
 
+    private int mInitialStepIndex;
     private RecipeViewModel mRecipeViewModel;
     private VideoPlayerViewModel mVideoPlayerViewModel;
     private SimpleExoPlayer mExoPlayer;
@@ -77,9 +80,10 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
 
 
 
-    public static VideoPlayerFragment newInstance(){
+    public static VideoPlayerFragment newInstance(int index){
         VideoPlayerFragment fragment = new VideoPlayerFragment();
         Bundle args = new Bundle();
+        args.putInt("index", index);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,7 +102,13 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         super.onCreate(savedInstanceState);
 
         Log.d("VideoPlayerFragment", "ONCREATE");
+        mInitialStepIndex = getArguments() != null ? getArguments().getInt("index") : 0;
 
+        if (savedInstanceState != null){
+            mPlayBackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
+            mCurrentWindow = savedInstanceState.getInt(CURRENT_WINDOW_INDEX);
+            mPlayWhenReady = savedInstanceState.getBoolean(PLAY_WHEN_READY, false);
+        }
     }
 
 
@@ -181,7 +191,24 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("VideoPlayerFragment", "ONPAUSE");
+
+        mPlayBackPosition = mExoPlayer.getCurrentPosition();
+        mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
+        mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        releasePlayer();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
         releasePlayer();
     }
@@ -202,29 +229,12 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
 
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("VideoPlayerFragment", "ONSTOP");
-
-        releasePlayer();
-    }
-
-
-    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        Log.d("VideoPlayerFragment", "ONSAVEINSTANCESTATE");
-
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        Log.d("VideoPlayerFragment", "ONDESTROY");
-
+        outState.putLong(PLAYBACK_POSITION, mPlayBackPosition);
+        outState.putInt(CURRENT_WINDOW_INDEX, mCurrentWindow);
+        outState.putBoolean(PLAY_WHEN_READY, mPlayWhenReady);
     }
 
 
@@ -297,7 +307,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         MediaSource mediaSource = new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory(userAgent))
                 .createMediaSource(Uri.parse(mMediaUrl));
-        mExoPlayer.prepare(mediaSource);
+        mExoPlayer.prepare(mediaSource, false, false);
     }
 
 
@@ -324,12 +334,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     private void releasePlayer(){
         if (mExoPlayer != null){
 
-            mVideoPlayerViewModel.setCurrentWindow(mExoPlayer.getCurrentWindowIndex());
-            mVideoPlayerViewModel.setPlayBackPosition(mExoPlayer.getContentPosition());
-            mVideoPlayerViewModel.setPlayWhenReady(mExoPlayer.getPlayWhenReady());
-            mVideoPlayerViewModel.setMediaUrl(mMediaUrl);
-
-            mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
         }

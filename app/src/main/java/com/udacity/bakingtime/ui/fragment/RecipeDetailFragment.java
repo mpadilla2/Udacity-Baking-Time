@@ -82,7 +82,7 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
         Fragment recipeInstructionsTaggedFragment = childFragmentManager.findFragmentByTag(RECIPE_INSTRUCTIONS_FRAGMENT);
 
         if (videoPlayerTaggedFragment == null){
-            videoPlayerTaggedFragment = VideoPlayerFragment.newInstance();
+            videoPlayerTaggedFragment = VideoPlayerFragment.newInstance(0);
             fragmentTransaction
                     .add(R.id.recipe_step_content_video_player_fragment, videoPlayerTaggedFragment, VIDEO_PLAYER_FRAGMENT)
                     .addToBackStack(VIDEO_PLAYER_STATE);
