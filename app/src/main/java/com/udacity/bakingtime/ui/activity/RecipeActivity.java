@@ -16,10 +16,19 @@ import android.view.View;
 
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
-// Todo - add homescreen widget that displays ingredient list for selected recipe
-// Todo - Add to Widget in the app itself in an already selected recipe
-
-// Todo - proper network check before grabbing info - use intent service this time!
+// Todo - add homescreen widget that displays ingredient list for desired recipe
+// Widget 1:13:30 - https://www.youtube.com/watch?v=gHEYLqO1Zao
+// Reference: https://developer.android.com/guide/topics/appwidgets/overview
+// Reference: https://developer.android.com/guide/topics/appwidgets/
+// * per mentor Bruno F.: "You do not need to display a list of the recipes on the widget neither ask them for selecting anything from there, you should be able to get the last clicked project and display the ingredients for that recipe. =)"
+//   based on the above answer from Bruno F.,
+//   when user selects a recipe in RecipeListFragment CustomItemClickListener, send the selected recipe name and ingredient formatted string to the widget.
+//   in the widget, receive the data and display the recipe name and ingredients
+// * choose the right widget: textviews should suffice
+// * resizable? Yes
+// * orientation/device independent, layout capable of stretching and contracting.
+// * previewImage - after it's working add a widget; configure it;
+//      then take a screenshot to save as a previewImage
 // Todo - Espresso tests of the UI
 // Todo - extract all dimensions, strings
 // Todo - clean code

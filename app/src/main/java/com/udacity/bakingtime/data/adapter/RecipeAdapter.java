@@ -17,6 +17,7 @@ import com.udacity.bakingtime.data.listener.CustomItemClickListener;
 import com.udacity.bakingtime.data.model.Recipe;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 // Reference: click listener code: https://gist.github.com/riyazMuhammad/1c7b1f9fa3065aa5a46f
@@ -82,6 +83,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
 
     public void setRecipeList(List<Recipe> recipeList){
+
+        // Reference: https://stackoverflow.com/a/32419279
+        recipeList.sort(new Comparator<Recipe>() {
+            @Override
+            public int compare(Recipe o1, Recipe o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
         mRecipeList.clear();
         mRecipeList.addAll(recipeList);
         notifyDataSetChanged();
