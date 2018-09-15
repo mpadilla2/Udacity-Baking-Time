@@ -29,6 +29,7 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 // * orientation/device independent, layout capable of stretching and contracting.
 // * previewImage - after it's working add a widget; configure it;
 //      then take a screenshot to save as a previewImage
+// * will need to store the previously selected recipe and ingredients from the widget. shared preferences should work since it's very minimal data.
 // Todo - Espresso tests of the UI
 // Todo - extract all dimensions, strings
 // Todo - clean code
