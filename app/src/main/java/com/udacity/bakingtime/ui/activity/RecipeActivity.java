@@ -20,7 +20,6 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 import java.util.List;
 import java.util.Objects;
 
-// Todo - home screen widget - preview image
 // Todo - Espresso tests of the UI
 // Todo - extract all dimensions, strings
 // Todo - clean code
