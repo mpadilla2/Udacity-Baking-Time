@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Context;
 
 import com.udacity.bakingtime.data.SharedPreferencesUtility;
+import com.udacity.bakingtime.data.model.Recipe;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -62,7 +63,7 @@ public class RecipeIngredientsUpdateService extends IntentService {
     private void handleActionUpdateIngredients(int recipeId, String recipeName, String recipeIngredients) {
 
         // Data is here, passed from the RecipeListFragment;
-        // Although widgets cannot have access to sharedpreferences save it away to sharedpreferences.
+        // Save it away to sharedpreferences in separate class.
         SharedPreferencesUtility.getInstance(getApplicationContext()).putData(getApplicationContext(), recipeId, recipeName, recipeIngredients);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);

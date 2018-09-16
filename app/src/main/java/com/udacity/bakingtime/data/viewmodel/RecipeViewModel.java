@@ -21,7 +21,6 @@ public class RecipeViewModel extends AndroidViewModel {
     private final MutableLiveData<Step> mSelectedRecipeStep = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mStepsEndReached = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mStepsBeginReached = new MutableLiveData<>();
-    private final MutableLiveData<Integer> mSelectedRecipeId = new MutableLiveData<>();
 
 
     public RecipeViewModel(@NonNull Application application) {
@@ -35,9 +34,6 @@ public class RecipeViewModel extends AndroidViewModel {
         return mAllRecipes;
     }
 
-    private List<Recipe> getRecipeList(){
-        return mAllRecipes.getValue();
-    }
 
     public void setSelectedRecipe(Recipe recipe){
         mSelectedRecipe.setValue(recipe);
@@ -49,28 +45,15 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
 
-    public void setSelectedRecipeId(Integer recipeId){
-
-        final List<Recipe> recipes = getRecipeList();
-
-        for (Recipe recipe : recipes){
-            if (recipe.getId() == recipeId){
-                setSelectedRecipe(recipe);
-                break;
-            }
-        }
-    }
-
-
     private List<Step> getAllRecipeSteps(LiveData<Recipe> recipe){
         return Objects.requireNonNull(recipe.getValue()).getSteps();
     }
 
 
-
     public void setSelectedRecipeStep(Step step){
         mSelectedRecipeStep.setValue(step);
     }
+
 
 
     public LiveData<Step> getSelectedRecipeStep(){

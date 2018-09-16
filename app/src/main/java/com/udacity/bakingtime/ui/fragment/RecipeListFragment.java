@@ -80,8 +80,8 @@ public class RecipeListFragment extends ViewLifecycleFragment {
                 // Reference: https://developer.android.com/topic/libraries/architecture/viewmodel#sharing
                 mRecipeViewModel.setSelectedRecipe(selectedRecipe);
 
-                // Pass the selected recipe id, name and formatted ingredient list string to widget.
                 // Reference: Udacity MyGarden app.
+                // Pass the selected recipe id, name and formatted ingredient list string to widget.
                 // Wondering if it would be more efficient to just save off to sharedpreferences here instead of in RecipeIngredientsUpdateService.
                 // Maybe something to consider changing later.
                 RecipeIngredientsUpdateService.startActionUpdateIngredients(

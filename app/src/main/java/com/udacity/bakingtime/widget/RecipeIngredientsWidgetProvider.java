@@ -30,7 +30,7 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
         Intent launchActivityIntent;
 
         // Grab the recipe info from sharedpreferences
-        final Bundle bundle = SharedPreferencesUtility.getInstance(context).getData(context);
+        Bundle bundle = SharedPreferencesUtility.getInstance(context).getData(context);
 
         recipeId = bundle.getInt(RECIPE_ID, 0);
         recipeName = bundle.getString(RECIPE_NAME, null);

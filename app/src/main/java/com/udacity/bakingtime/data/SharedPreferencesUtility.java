@@ -56,7 +56,7 @@ public class SharedPreferencesUtility {
     public Bundle getData(Context context){
 
         Bundle bundle = new Bundle();
-        bundle.putInt(RECIPE_ID, mSharedPreferences.getInt(RECIPE_ID, 1));
+        bundle.putInt(RECIPE_ID, mSharedPreferences.getInt(RECIPE_ID, 0));
         bundle.putString(RECIPE_NAME, mSharedPreferences.getString(RECIPE_NAME, null));
         bundle.putString(RECIPE_INGREDIENTS, mSharedPreferences.getString(RECIPE_INGREDIENTS, null));
 
