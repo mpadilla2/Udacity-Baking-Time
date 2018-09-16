@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.adapter.RecipeAdapter;
@@ -22,6 +21,7 @@ import com.udacity.bakingtime.data.listener.CustomItemClickListener;
 import com.udacity.bakingtime.data.model.Recipe;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 import com.udacity.bakingtime.ui.utils.RecyclerViewItemDecoration;
+import com.udacity.bakingtime.widget.RecipeIngredientsUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +75,19 @@ public class RecipeListFragment extends ViewLifecycleFragment {
         mRecipeAdapter = new RecipeAdapter(mRecipeList, new CustomItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Recipe selectedRecipe = mRecipeList.get(position);
+
                 // Reference: https://developer.android.com/topic/libraries/architecture/viewmodel#sharing
-                mRecipeViewModel.setSelectedRecipe(mRecipeList.get(position));
+                mRecipeViewModel.setSelectedRecipe(selectedRecipe);
+
+                // Pass the selected recipe id, name and formatted ingredient list string to widget.
+                // Reference: Udacity MyGarden app.
+                // Wondering if it would be more efficient to just save off to sharedpreferences here instead of in RecipeIngredientsUpdateService.
+                // Maybe something to consider changing later.
+                RecipeIngredientsUpdateService.startActionUpdateIngredients(
+                        getActivity().getApplicationContext(), selectedRecipe.getId(),
+                        selectedRecipe.getName(), selectedRecipe.getIngredientsString());
+
                 launchRecipeIngredientsSteps();
             }
         });
