@@ -80,7 +80,8 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        // remove recipe entry
+        SharedPreferencesUtility.getInstance(context).removeData();
     }
 }
 

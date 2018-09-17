@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.udacity.bakingtime.R;
 
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.udacity.bakingtime.data.SharedPreferencesUtility;
@@ -26,11 +27,13 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 import java.util.List;
 import java.util.Objects;
 
-// Todo - delete shared preference entry when widget removal?
 // Todo - Espresso tests of the UI
 // Todo - extract all dimensions, strings
 // Todo - clean code
 // Todo - review rubric, mocks to see if missed anything
+
+// DONE - delete shared preference entry when widget removal?
+
 
 public class RecipeActivity extends AppCompatActivity{
 
@@ -41,7 +44,7 @@ public class RecipeActivity extends AppCompatActivity{
     boolean isLandscape;
     Toolbar mToolbar;
     AppBarLayout mAppBarLayout;
-    int mRecipeId;
+    int mRecipeId = 0;
     private RecipeViewModel mRecipeViewModel;
 
 

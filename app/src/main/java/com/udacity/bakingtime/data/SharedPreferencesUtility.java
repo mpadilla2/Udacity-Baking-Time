@@ -59,4 +59,10 @@ public class SharedPreferencesUtility {
         String recipe_json = mSharedPreferences.getString(SELECTED_RECIPE, "");
         return gson.fromJson(recipe_json, Recipe.class);
     }
+
+
+    public void removeData(){
+        mSharedPreferencesEditor.remove(SELECTED_RECIPE);
+        mSharedPreferencesEditor.apply();
+    }
 }
