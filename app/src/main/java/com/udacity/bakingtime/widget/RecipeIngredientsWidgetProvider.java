@@ -5,11 +5,11 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.SharedPreferencesUtility;
+import com.udacity.bakingtime.data.model.Recipe;
 import com.udacity.bakingtime.ui.activity.RecipeActivity;
 
 /**
@@ -18,9 +18,6 @@ import com.udacity.bakingtime.ui.activity.RecipeActivity;
 public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
 
     private static final String RECIPE_ID = "com.udacity.bakingtime.widget.extra.RECIPE_ID";
-    private static final String RECIPE_NAME = "com.udacity.bakingtime.widget.extra.RECIPE_NAME";
-    private static final String RECIPE_INGREDIENTS = "com.udacity.bakingtime.widget.extra.RECIPE_INGREDIENTS";
-
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
@@ -30,17 +27,14 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
         Intent launchActivityIntent;
 
         // Grab the recipe info from sharedpreferences
-        Bundle bundle = SharedPreferencesUtility.getInstance(context).getData(context);
+        Recipe recipe = SharedPreferencesUtility.getInstance(context).getData();
 
-        recipeId = bundle.getInt(RECIPE_ID, 0);
-        recipeName = bundle.getString(RECIPE_NAME, null);
-        recipeIngredients = bundle.getString(RECIPE_INGREDIENTS, null);
-
-        if (recipeName == null){
+        if (recipe != null) {
+            recipeId = recipe.getId();
+            recipeName = recipe.getName();
+            recipeIngredients = recipe.getIngredientsString();
+        } else {
             recipeName = context.getString(R.string.widget_recipe_name_text);
-        }
-
-        if (recipeIngredients == null){
             recipeIngredients = context.getString(R.string.widget_recipe_ingredients_text);
         }
 

@@ -1,7 +1,10 @@
 package com.udacity.bakingtime.ui.activity;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,17 +17,20 @@ import com.udacity.bakingtime.R;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.udacity.bakingtime.data.SharedPreferencesUtility;
+import com.udacity.bakingtime.data.model.Recipe;
+import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 import com.udacity.bakingtime.ui.fragment.RecipeIngredientStepFragment;
 import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 
 import java.util.List;
 import java.util.Objects;
 
+// Todo - delete shared preference entry when widget removal?
 // Todo - Espresso tests of the UI
 // Todo - extract all dimensions, strings
 // Todo - clean code
 // Todo - review rubric, mocks to see if missed anything
-
 
 public class RecipeActivity extends AppCompatActivity{
 
@@ -36,6 +42,8 @@ public class RecipeActivity extends AppCompatActivity{
     Toolbar mToolbar;
     AppBarLayout mAppBarLayout;
     int mRecipeId;
+    private RecipeViewModel mRecipeViewModel;
+
 
 
     @Override
@@ -48,7 +56,35 @@ public class RecipeActivity extends AppCompatActivity{
         mToolbar = findViewById(R.id.recipe_activity_toolbar);
         mAppBarLayout = findViewById(R.id.recipe_activity_app_bar);
 
-        loadRecipeList();
+
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+
+        final Observer<List<Recipe>> recipeListObserver = new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+            }
+        };
+        mRecipeViewModel.getAllRecipes()
+                .observe(Objects.requireNonNull(this), recipeListObserver);
+
+        if (savedInstanceState == null) {
+
+            // Read in from shared preferences.
+            // if app is started from widget, there may be a selected recipe in shared preferences
+            // Create a Recipe object
+            // set the selected recipe using the created recipe object
+            // If had to create object, then launchRecipeIngredientsSteps
+            // else loadRecipeList
+
+            Recipe recipe = SharedPreferencesUtility.getInstance(this).getData();
+
+            if (recipe != null){
+                mRecipeViewModel.setSelectedRecipe(recipe);
+                launchRecipeIngredientsSteps();
+            } else {
+                loadRecipeList();
+            }
+        }
     }
 
 
@@ -108,6 +144,7 @@ public class RecipeActivity extends AppCompatActivity{
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
             mToolbar.setTitle(R.string.app_name);
+            loadRecipeList();
         }
 
         if (isLandscape) {
@@ -130,7 +167,7 @@ public class RecipeActivity extends AppCompatActivity{
 
         mRecipeId = intent.getIntExtra(RECIPE_ID, 0);
 
-        if (mRecipeId != 0){
+        if (mRecipeId > 0){
             launchRecipeIngredientsSteps();
         }
     }

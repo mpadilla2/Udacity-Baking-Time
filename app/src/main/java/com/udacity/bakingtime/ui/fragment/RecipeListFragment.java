@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.udacity.bakingtime.R;
+import com.udacity.bakingtime.data.SharedPreferencesUtility;
 import com.udacity.bakingtime.data.adapter.RecipeAdapter;
 import com.udacity.bakingtime.data.listener.CustomItemClickListener;
 import com.udacity.bakingtime.data.model.Recipe;
@@ -81,12 +82,13 @@ public class RecipeListFragment extends ViewLifecycleFragment {
                 mRecipeViewModel.setSelectedRecipe(selectedRecipe);
 
                 // Reference: Udacity MyGarden app.
-                // Pass the selected recipe id, name and formatted ingredient list string to widget.
-                // Wondering if it would be more efficient to just save off to sharedpreferences here instead of in RecipeIngredientsUpdateService.
-                // Maybe something to consider changing later.
-                RecipeIngredientsUpdateService.startActionUpdateIngredients(
-                        getActivity().getApplicationContext(), selectedRecipe.getId(),
-                        selectedRecipe.getName(), selectedRecipe.getIngredientsString());
+                // HAVE to change it so when app returns from being closed for a while and widget has a recipe, I can rebuild the selected recipe.
+                // So store the recipe in shared preferences here, then launch RecipeIngredientsUpdateService.startActionUpdateIngredients with only context.
+                SharedPreferencesUtility.getInstance(
+                        getActivity().getApplicationContext()).
+                        putData(getActivity().getApplicationContext(), selectedRecipe);
+
+                RecipeIngredientsUpdateService.startActionUpdateIngredients(getActivity().getApplicationContext());
 
                 launchRecipeIngredientsSteps();
             }

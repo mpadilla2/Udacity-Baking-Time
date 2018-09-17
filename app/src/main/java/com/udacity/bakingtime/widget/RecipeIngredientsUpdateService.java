@@ -15,11 +15,6 @@ import com.udacity.bakingtime.data.model.Recipe;
  */
 public class RecipeIngredientsUpdateService extends IntentService {
 
-    private static final String ACTION_UPDATE_INGREDIENTS_WIDGETS = "com.udacity.bakingtime.widget.action.UPDATE_INGREDIENTS";
-    private static final String RECIPE_ID = "com.udacity.bakingtime.widget.extra.RECIPE_ID";
-    private static final String RECIPE_NAME = "com.udacity.bakingtime.widget.extra.RECIPE_NAME";
-    private static final String RECIPE_INGREDIENTS = "com.udacity.bakingtime.widget.extra.RECIPE_INGREDIENTS";
-
 
     public RecipeIngredientsUpdateService() {
         super("RecipeIngredientsUpdateService");
@@ -32,42 +27,19 @@ public class RecipeIngredientsUpdateService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionUpdateIngredients(Context context, int recipeId, String recipeName, String recipeIngredients) {
-        Intent intent = new Intent(context, RecipeIngredientsUpdateService.class);
-        intent.setAction(ACTION_UPDATE_INGREDIENTS_WIDGETS);
-        intent.putExtra(RECIPE_ID, recipeId);
-        intent.putExtra(RECIPE_NAME, recipeName);
-        intent.putExtra(RECIPE_INGREDIENTS, recipeIngredients);
-        context.startService(intent);
+    public static void startActionUpdateIngredients(Context context) {
+        handleActionUpdateIngredients(context);
     }
 
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_UPDATE_INGREDIENTS_WIDGETS.equals(action)) {
-                final int param1 = intent.getIntExtra(RECIPE_ID, 0);
-                final String param2 = intent.getStringExtra(RECIPE_NAME);
-                final String param3 = intent.getStringExtra(RECIPE_INGREDIENTS);
-                handleActionUpdateIngredients(param1, param2, param3);
-            }
-        }
     }
 
 
-    /**
-     * Handle action UPDATE_INGREDIENTS in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionUpdateIngredients(int recipeId, String recipeName, String recipeIngredients) {
-
-        // Data is here, passed from the RecipeListFragment;
-        // Save it away to sharedpreferences in separate class.
-        SharedPreferencesUtility.getInstance(getApplicationContext()).putData(getApplicationContext(), recipeId, recipeName, recipeIngredients);
-
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeIngredientsWidgetProvider.class));
-        RecipeIngredientsWidgetProvider.updateRecipeIngredientsWidgets(this, appWidgetManager, appWidgetIds);
+    private static void handleActionUpdateIngredients(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, RecipeIngredientsWidgetProvider.class));
+        RecipeIngredientsWidgetProvider.updateRecipeIngredientsWidgets(context, appWidgetManager, appWidgetIds);
     }
 }

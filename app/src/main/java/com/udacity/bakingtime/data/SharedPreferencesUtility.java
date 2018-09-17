@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+import com.udacity.bakingtime.data.model.Recipe;
+
+import java.util.List;
+
 // Reference: https://developer.android.com/reference/android/content/SharedPreferences
 // Reference: https://developer.android.com/training/data-storage/shared-preferences
 // Reference: https://gist.github.com/chintansoni202/f1767fbe68f7f897cfb3096e8cd83480
@@ -15,11 +20,7 @@ public class SharedPreferencesUtility {
     private SharedPreferences.Editor mSharedPreferencesEditor;
 
     private static final String PREF_FILENAME = "widget_preferences";
-    private static final String RECIPE_ID = "com.udacity.bakingtime.widget.extra.RECIPE_ID";
-    private static final String RECIPE_NAME = "com.udacity.bakingtime.widget.extra.RECIPE_NAME";
-    private static final String RECIPE_INGREDIENTS = "com.udacity.bakingtime.widget.extra.RECIPE_INGREDIENTS";
-
-
+    private static final String SELECTED_RECIPE = "com.udacity.bakingtime.widget.extra.SELECTED_RECIPE";
 
     private SharedPreferencesUtility(Context context){
         mContext = context;
@@ -44,22 +45,18 @@ public class SharedPreferencesUtility {
     }
 
 
-    public void putData(Context context, int recipeId, String recipeName, String recipeIngredients){
-
-        mSharedPreferencesEditor.putInt(RECIPE_ID, recipeId);
-        mSharedPreferencesEditor.putString(RECIPE_NAME, recipeName);
-        mSharedPreferencesEditor.putString(RECIPE_INGREDIENTS, recipeIngredients);
+    // Reference: https://www.javacodegeeks.com/2013/12/storing-objects-in-android.html
+    public void putData(Context context, Recipe recipe){
+        Gson gson = new Gson();
+        String recipe_json = gson.toJson(recipe);
+        mSharedPreferencesEditor.putString(SELECTED_RECIPE, recipe_json);
         mSharedPreferencesEditor.apply();
     }
 
 
-    public Bundle getData(Context context){
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(RECIPE_ID, mSharedPreferences.getInt(RECIPE_ID, 0));
-        bundle.putString(RECIPE_NAME, mSharedPreferences.getString(RECIPE_NAME, null));
-        bundle.putString(RECIPE_INGREDIENTS, mSharedPreferences.getString(RECIPE_INGREDIENTS, null));
-
-        return bundle;
+    public Recipe getData(){
+        Gson gson = new Gson();
+        String recipe_json = mSharedPreferences.getString(SELECTED_RECIPE, "");
+        return gson.fromJson(recipe_json, Recipe.class);
     }
 }
