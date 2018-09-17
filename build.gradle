@@ -36,6 +36,7 @@ ext {
     gsonVersion = '2.8.4'
     junitVersion = '4.12'
     retrofitVersion = '2.4.0'
+    rulesVersion = '1.0.2'
     runnerVersion = '1.0.2'
     supportLibVersion = '27.1.1'
 }
