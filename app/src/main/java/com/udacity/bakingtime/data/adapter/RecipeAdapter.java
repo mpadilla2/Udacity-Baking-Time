@@ -33,8 +33,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
         ViewHolder(final View view) {
             super(view);
-            mRecipeText = (TextView) view.findViewById(R.id.recipe_item_textview);
-            mRecipeImage = (ImageView) view.findViewById(R.id.recipe_item_imageview);
+            mRecipeText = view.findViewById(R.id.recipe_item_textview);
+            mRecipeImage = view.findViewById(R.id.recipe_item_imageview);
         }
     }
 

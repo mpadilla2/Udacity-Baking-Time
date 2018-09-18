@@ -8,5 +8,34 @@
 Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
-    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_margin">0dp</dimen>
+    <dimen name="widget_recipe_name_textSize">16sp</dimen>
+    <dimen name="widget_recipe_name_layout_margin">8dp</dimen>
+    <dimen name="widget_recipe_ingredients_layout_margin">8dp</dimen>
+    <dimen name="widget_recipe_ingredients_textSize">14sp</dimen>
+    <dimen name="ingredients_label_paddingTop">16dp</dimen>
+    <dimen name="ingredients_label_paddingStart">16dp</dimen>
+    <dimen name="ingredients_label_paddingEnd">16dp</dimen>
+    <dimen name="ingredients_label_textSize">14sp</dimen>
+    <dimen name="recipe_ingredients_textView_paddingTop">16dp</dimen>
+    <dimen name="recipe_ingredients_textView_paddingStart">16dp</dimen>
+    <dimen name="recipe_ingredients_textView_paddingEnd">16dp</dimen>
+    <dimen name="recipe_ingredients_textView_textSize">14sp</dimen>
+    <dimen name="separator_layout_height">1dp</dimen>
+    <dimen name="recipe_step_item_textview_paddingStart">16dp</dimen>
+    <dimen name="recipe_step_item_textview_paddingEnd">16dp</dimen>
+    <dimen name="recipe_step_item_textview_paddingTop">8dp</dimen>
+    <dimen name="recipe_step_item_textview_paddingBottom">8dp</dimen>
+    <dimen name="recipe_step_item_textview_textSize">14sp</dimen>
+    <dimen name="recipe_item_cardview_cardCornerRadius">5dp</dimen>
+    <dimen name="recipe_item_cardview_cardElevation">5dp</dimen>
+    <dimen name="recipe_item_textview_padding">16dp</dimen>
+    <dimen name="recipe_item_textview_textSize">16sp</dimen>
+    <dimen name="fragment_video_player_playerView_layout_height">0dp</dimen>
+    <dimen name="recipe_step_content_textView_layout_height">0dp</dimen>
+    <dimen name="recipe_step_content_textView_textSize">16sp</dimen>
+    <dimen name="recipe_step_instructions_textView_textSize">16sp</dimen>
+    <dimen name="recipe_ingredient_step_framelayout_layout_height">0dp</dimen>
+    <dimen name="recipe_ingredients_widget_minHeight">40dp</dimen>
+    <dimen name="recipe_ingredients_widget_minWidth">110dp</dimen>
 </resources>

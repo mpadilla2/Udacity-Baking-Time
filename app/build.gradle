@@ -56,11 +56,10 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-    }
+
+    debugImplementation "com.android.support.test.espresso.idling:idling-concurrent:$rootProject.espressoVersion"
+    debugImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$rootProject.okhttp3IdlingResourceVersion"
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recipe_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,5 +9,8 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"/>
+    app:layout_constraintRight_toRightOf="parent"
+    tools:context=".ui.activity.RecipeActivity"
+    tools:showIn="@layout/activity_recipe"
+    tools:listitem="@layout/layout_recipe_item" />
 

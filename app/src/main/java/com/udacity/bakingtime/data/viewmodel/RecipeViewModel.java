@@ -58,7 +58,7 @@ public class RecipeViewModel extends AndroidViewModel {
 
     public LiveData<Step> getSelectedRecipeStep(){
 
-        if (mSelectedRecipeStep.getValue().equals(null)){
+        if (Objects.requireNonNull(mSelectedRecipeStep.getValue()).equals(null)){
             setSelectedRecipeStep(Objects.requireNonNull(mSelectedRecipe.getValue()).getSteps().get(0));
         }
 

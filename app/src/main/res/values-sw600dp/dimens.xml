@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="sw600dp_recipe_ingredient_step_nestedscrollview_layout_width">0dp</dimen>
+    <dimen name="sw600dp_recipe_ingredient_step_framelayout_layout_height">0dp</dimen>
+    <dimen name="sw600dp_item_detail_container_layout_width">0dp</dimen>
+    <dimen name="sw600dp_tablet_linearlayout_dividerPadding">16dp</dimen>
+</resources>

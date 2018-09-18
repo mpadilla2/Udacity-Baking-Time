@@ -12,7 +12,7 @@
         android:text="@string/recipe_step_instructions_textView"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textStyle="normal"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/recipe_step_instructions_textView_textSize"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/horizontalThreeQuarters"

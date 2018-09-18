@@ -1,6 +1,5 @@
 package com.udacity.bakingtime.ui.fragment;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.Configuration;
@@ -10,10 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -39,19 +35,7 @@ import com.udacity.bakingtime.data.model.Step;
 import com.udacity.bakingtime.data.viewmodel.RecipeViewModel;
 import com.udacity.bakingtime.data.viewmodel.VideoPlayerViewModel;
 
-import java.util.List;
 import java.util.Objects;
-
-
-// onpause
-// onsaveinstancestate
-// onstop
-// ondestroy
-// oncreate
-// onviewcreated
-// onactivitycreated
-// onstart
-// onresume
 
 
 // Reference: Exoplayer tutorial: https://codelabs.developers.google.com/codelabs/exoplayer-intro/#2
@@ -62,10 +46,9 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     private static final String PLAYBACK_POSITION = "playback_position";
     private static final String CURRENT_WINDOW_INDEX = "current_window_index";
     private static final String PLAY_WHEN_READY = "play_when_ready";
+    public static final String INDEX = "index";
 
-    private int mInitialStepIndex;
     private RecipeViewModel mRecipeViewModel;
-    private VideoPlayerViewModel mVideoPlayerViewModel;
     private SimpleExoPlayer mExoPlayer;
     private PlayerView mPlayerView;
     private boolean mPlayWhenReady;
@@ -74,7 +57,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     private String mMediaUrl;
     private String mThumbnailUrl;
     private TextView mTextView;
-    boolean isLandscape;
+    private boolean isLandscape;
     private boolean mIsLargeScreen;
     private AppBarLayout mAppBarLayout;
 
@@ -83,7 +66,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     public static VideoPlayerFragment newInstance(int index){
         VideoPlayerFragment fragment = new VideoPlayerFragment();
         Bundle args = new Bundle();
-        args.putInt("index", index);
+        args.putInt(INDEX, index);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,8 +84,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("VideoPlayerFragment", "ONCREATE");
-        mInitialStepIndex = getArguments() != null ? getArguments().getInt("index") : 0;
+        int mInitialStepIndex = getArguments() != null ? getArguments().getInt(INDEX) : 0;
 
         if (savedInstanceState != null){
             mPlayBackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
@@ -117,8 +99,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        Log.d("VideoPlayerFragment", "ONCREATEVIEW");
-
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
@@ -132,20 +112,10 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Log.d("VideoPlayerFragment", "ONSTART");
-
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Log.d("VideoPlayerFragment", "ONACTIVITYCREATED");
-
 
         if (!mIsLargeScreen) {
 
@@ -183,8 +153,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
         mRecipeViewModel = ViewModelProviders.of(
                 Objects.requireNonNull(getActivity())).get(RecipeViewModel.class);
 
-        mVideoPlayerViewModel = ViewModelProviders.of(
-                Objects.requireNonNull(getActivity())).get(VideoPlayerViewModel.class);
+        VideoPlayerViewModel mVideoPlayerViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(VideoPlayerViewModel.class);
     }
 
 
@@ -192,9 +161,11 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     public void onPause() {
         super.onPause();
 
-        mPlayBackPosition = mExoPlayer.getCurrentPosition();
-        mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
-        mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        if (mExoPlayer != null) {
+            mPlayBackPosition = mExoPlayer.getCurrentPosition();
+            mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
+            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
     }
 
 
@@ -218,8 +189,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     public void onResume() {
         super.onResume();
 
-        Log.d("VideoPlayerFragment", "ONRESUME");
-
         if (!mMediaUrl.isEmpty() && mPlayBackPosition > 0 && mExoPlayer != null){
             loadRecipeStepContent();
             mExoPlayer.seekTo(mPlayBackPosition);
@@ -238,14 +207,6 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     }
 
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Log.d("VideoPlayerFragment", "ONVIEWCREATED");
-    }
-
-
     private void loadRecipeStepContent(){
 
         final Observer<Step> stepObserver = new Observer<Step>() {
@@ -259,7 +220,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
                     releasePlayer();
                 }
 
-                if (!step.getVideoURL().isEmpty()) {
+                if (!Objects.requireNonNull(step).getVideoURL().isEmpty()) {
                     mMediaUrl = step.getVideoURL();
                 }
 
@@ -274,7 +235,7 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
                     mTextView.setVisibility(View.GONE);
                     mPlayerView.setVisibility(View.VISIBLE);
 
-                    Glide.with(getContext())
+                    Glide.with(Objects.requireNonNull(getContext()))
                             .asBitmap()
                             .load(mThumbnailUrl)
                             .apply(new RequestOptions().fitCenter())

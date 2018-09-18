@@ -10,10 +10,10 @@
             style="?android:attr/textAppearanceLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:textSize="14sp"/>
+            android:paddingStart="@dimen/recipe_step_item_textview_paddingStart"
+            android:paddingEnd="@dimen/recipe_step_item_textview_paddingEnd"
+            android:paddingTop="@dimen/recipe_step_item_textview_paddingTop"
+            android:paddingBottom="@dimen/recipe_step_item_textview_paddingBottom"
+            android:textSize="@dimen/recipe_step_item_textview_textSize"/>
 
 </android.support.constraint.ConstraintLayout>

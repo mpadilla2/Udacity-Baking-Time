@@ -15,7 +15,6 @@ import android.os.Bundle;
 import com.udacity.bakingtime.R;
 
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.udacity.bakingtime.data.SharedPreferencesUtility;
@@ -27,13 +26,6 @@ import com.udacity.bakingtime.ui.fragment.RecipeListFragment;
 import java.util.List;
 import java.util.Objects;
 
-// Todo - Espresso tests of the UI
-// Todo - extract all dimensions, strings
-// Todo - clean code
-// Todo - review rubric, mocks to see if missed anything
-
-// DONE - delete shared preference entry when widget removal?
-
 
 public class RecipeActivity extends AppCompatActivity{
 
@@ -41,12 +33,9 @@ public class RecipeActivity extends AppCompatActivity{
     private static final String RECIPE_ID = "com.udacity.bakingtime.widget.extra.RECIPE_ID";
     private static final String RECIPE_INGREDIENT_STEP_FRAGMENT = "recipe_ingredient_step_fragment";
     private static final String RECIPE_LIST_STATE = "recipe_list_state";
-    boolean isLandscape;
-    Toolbar mToolbar;
-    AppBarLayout mAppBarLayout;
-    int mRecipeId = 0;
-    private RecipeViewModel mRecipeViewModel;
-
+    private boolean isLandscape;
+    private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
 
 
     @Override
@@ -60,7 +49,7 @@ public class RecipeActivity extends AppCompatActivity{
         mAppBarLayout = findViewById(R.id.recipe_activity_app_bar);
 
 
-        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         final Observer<List<Recipe>> recipeListObserver = new Observer<List<Recipe>>() {
             @Override
@@ -144,7 +133,7 @@ public class RecipeActivity extends AppCompatActivity{
         super.onBackPressed();
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
             mToolbar.setTitle(R.string.app_name);
             loadRecipeList();
@@ -168,7 +157,7 @@ public class RecipeActivity extends AppCompatActivity{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        mRecipeId = intent.getIntExtra(RECIPE_ID, 0);
+        int mRecipeId = intent.getIntExtra(RECIPE_ID, 0);
 
         if (mRecipeId > 0){
             launchRecipeIngredientsSteps();

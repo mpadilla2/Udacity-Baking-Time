@@ -31,15 +31,12 @@ import java.util.Objects;
 // https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format/35238038#35238038
 public class RecipeListFragment extends ViewLifecycleFragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String RECIPE_INGREDIENT_STEP_FRAGMENT = "recipe_ingredient_step_fragment";
     private static final String RECIPE_LIST_STATE = "recipe_list_state";
 
-    private int mColumnCount;
     private List<Recipe> mRecipeList = new ArrayList<>();
     private RecipeViewModel mRecipeViewModel;
     private RecipeAdapter mRecipeAdapter;
-    private boolean mIsLargeScreen;
 
 
     public static RecipeListFragment newInstance(){
@@ -55,12 +52,6 @@ public class RecipeListFragment extends ViewLifecycleFragment {
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -69,7 +60,7 @@ public class RecipeListFragment extends ViewLifecycleFragment {
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
         // Reference: https://stackoverflow.com/questions/35237549/change-layoutmanager-depending-on-device-format
-        mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
+        boolean mIsLargeScreen = Objects.requireNonNull(getActivity()).getResources().getBoolean(R.bool.isLargeScreen);
 
         RecyclerView recyclerView = view.findViewById(R.id.recipe_recyclerview);
 
@@ -99,7 +90,7 @@ public class RecipeListFragment extends ViewLifecycleFragment {
 
 
         if (mIsLargeScreen){
-            mColumnCount = 3;
+            int mColumnCount = 3;
             layoutManager = new GridLayoutManager(getActivity(), mColumnCount);
             recyclerView.addItemDecoration(new RecyclerViewItemDecoration(mColumnCount, spacingInPixels, true, 0));
         } else {

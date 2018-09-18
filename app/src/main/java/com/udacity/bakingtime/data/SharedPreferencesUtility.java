@@ -1,13 +1,11 @@
 package com.udacity.bakingtime.data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.udacity.bakingtime.data.model.Recipe;
-
-import java.util.List;
 
 // Reference: https://developer.android.com/reference/android/content/SharedPreferences
 // Reference: https://developer.android.com/training/data-storage/shared-preferences
@@ -15,15 +13,14 @@ import java.util.List;
 public class SharedPreferencesUtility {
 
     private static volatile SharedPreferencesUtility mSharedPreferencesUtility;
-    private Context mContext;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mSharedPreferencesEditor;
 
     private static final String PREF_FILENAME = "widget_preferences";
     private static final String SELECTED_RECIPE = "com.udacity.bakingtime.widget.extra.SELECTED_RECIPE";
 
+    @SuppressLint("CommitPrefEdits")
     private SharedPreferencesUtility(Context context){
-        mContext = context;
         mSharedPreferences = context.getSharedPreferences(PREF_FILENAME, Context.MODE_PRIVATE);
         mSharedPreferencesEditor = mSharedPreferences.edit();
     }

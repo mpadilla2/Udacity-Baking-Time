@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="@color/colorMediumBlue"
     android:padding="@dimen/widget_margin"
     android:orientation="vertical">
 
@@ -9,23 +9,23 @@
         android:id="@+id/widget_recipe_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="#09C"
+        android:layout_margin="@dimen/widget_recipe_name_layout_margin"
+        android:background="@color/colorMediumBlue"
         android:contentDescription="@string/widget_recipe_name_text_content_description"
         android:text="@string/widget_recipe_name_text"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/widget_recipe_name_textSize"
         />
 
     <TextView
         android:id="@+id/widget_recipe_ingredients_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="#09C"
+        android:layout_margin="@dimen/widget_recipe_ingredients_layout_margin"
+        android:background="@color/colorMediumBlue"
         android:contentDescription="@string/widget_recipe_ingredients_text_content_description"
         android:text="@string/widget_recipe_ingredients_text"
-        android:textColor="#ffffff"
-        android:textSize="14sp"/>
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/widget_recipe_ingredients_textSize"/>
 
 </LinearLayout>

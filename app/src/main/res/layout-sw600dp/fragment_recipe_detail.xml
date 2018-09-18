@@ -38,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@id/horizontalHalf"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="InconsistentLayout" />
 
 </android.support.constraint.ConstraintLayout>

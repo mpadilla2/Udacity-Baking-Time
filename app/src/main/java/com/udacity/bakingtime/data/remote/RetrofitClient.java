@@ -1,5 +1,6 @@
 package com.udacity.bakingtime.data.remote;
 
+import espresso.idling_resource.IdlingResources;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -8,14 +9,13 @@ public class RetrofitClient {
 
     public static Retrofit getRetrofitClient(String baseUrl){
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        OkHttpClient httpClient = new OkHttpClient();
+        IdlingResources.registerOkHttp(httpClient);
 
-        Retrofit retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+                .client(httpClient)
                 .build();
-
-        return retrofit;
     }
 }

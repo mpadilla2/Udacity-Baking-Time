@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tablet_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="?android:attr/listDivider"
     android:showDividers="middle"
-    android:dividerPadding="16dp"
+    android:dividerPadding="@dimen/sw600dp_tablet_linearlayout_dividerPadding"
     android:baselineAligned="false"
     android:orientation="horizontal">
 
     <android.support.v4.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recipe_ingredient_step_nestedscrollview"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/sw600dp_recipe_ingredient_step_nestedscrollview_layout_width"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true"
@@ -22,7 +23,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/recipe_ingredient_step_framelayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/sw600dp_recipe_ingredient_step_framelayout_layout_height"
             android:descendantFocusability="blocksDescendants">
 
             <include
@@ -36,9 +37,10 @@
 
     <FrameLayout
         android:id="@+id/item_detail_container"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/sw600dp_item_detail_container_layout_width"
         android:layout_height="match_parent"
-        android:layout_weight="3"/>
+        android:layout_weight="3"
+        tools:ignore="InconsistentLayout" />
 </LinearLayout>
 
 <!--

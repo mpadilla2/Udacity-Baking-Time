@@ -6,9 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.Context;
 
-import com.udacity.bakingtime.data.SharedPreferencesUtility;
-import com.udacity.bakingtime.data.model.Recipe;
-
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.

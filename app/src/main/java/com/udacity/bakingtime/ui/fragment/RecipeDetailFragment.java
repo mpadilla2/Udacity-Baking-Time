@@ -24,8 +24,8 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
     private static final String RECIPE_INSTRUCTIONS_STATE = "recipe_instructions_state";
 
 
-    FrameLayout recipeInstructionsFrameLayout;
-    boolean isLandscape;
+    private FrameLayout recipeInstructionsFrameLayout;
+    private boolean isLandscape;
     private boolean mIsLargeScreen = false;
 
 
@@ -42,12 +42,6 @@ public class RecipeDetailFragment extends ViewLifecycleFragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public RecipeDetailFragment() {
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
 

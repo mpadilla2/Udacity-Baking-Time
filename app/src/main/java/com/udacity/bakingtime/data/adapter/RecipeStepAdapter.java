@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.data.listener.CustomItemClickListener;
-import com.udacity.bakingtime.data.model.Recipe;
 import com.udacity.bakingtime.data.model.Step;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Vi
 
         ViewHolder(final View view){
             super(view);
-            mRecipeStepText = (TextView) view.findViewById(R.id.recipe_step_item_textview);
+            mRecipeStepText = view.findViewById(R.id.recipe_step_item_textview);
         }
 
     }

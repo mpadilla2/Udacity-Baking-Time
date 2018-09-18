@@ -3,8 +3,6 @@ package com.udacity.bakingtime.data.remote;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -36,7 +34,6 @@ public class DataRepository {
                 if (response.isSuccessful()){
                     if (response.body() != null) {
                         recipes.setValue(response.body());
-                        Log.d("DATAREPOSITORY", "LOADED RECIPES FOR FROM INTERNET API");
                     }
                 }
             }

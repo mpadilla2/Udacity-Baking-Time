@@ -10,8 +10,8 @@
         android:id="@+id/recipe_item_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="5dp"
+        app:cardCornerRadius="@dimen/recipe_item_cardview_cardCornerRadius"
+        app:cardElevation="@dimen/recipe_item_cardview_cardElevation"
         android:layout_centerHorizontal="true">
 
         <FrameLayout
@@ -43,8 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:padding="16dp"
-                android:textSize="16sp"
+                android:padding="@dimen/recipe_item_textview_padding"
+                android:textSize="@dimen/recipe_item_textview_textSize"
                 android:textStyle="bold"/>
         </FrameLayout>
 

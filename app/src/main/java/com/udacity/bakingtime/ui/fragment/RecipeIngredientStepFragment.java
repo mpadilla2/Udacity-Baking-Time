@@ -1,6 +1,5 @@
 package com.udacity.bakingtime.ui.fragment;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,12 +58,6 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -81,7 +73,7 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -113,9 +105,6 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
         loadRecipeSteps();
         loadIngredients();
         setToolbarTitle();
-        //initRecipeStep();
-
-        Log.d("INGREDIENTSTEPFRAGMENT", "ONACTIVITYCREATED FIRED");
     }
 
 
@@ -189,13 +178,4 @@ public class RecipeIngredientStepFragment extends ViewLifecycleFragment {
 
         fragmentTransaction.commit();
     }
-
-
-/*    private void initRecipeStep(){
-
-        if (mIsLargeScreen) {
-            mRecipeViewModel.setSelectedRecipeStep(mRecipeStepList.get(0));
-            launchRecipeStepContent();
-        }
-    }*/
 }

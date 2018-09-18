@@ -10,7 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/recipe_ingredient_step_framelayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/recipe_ingredient_step_framelayout_layout_height"
         android:descendantFocusability="blocksDescendants">
 
         <include

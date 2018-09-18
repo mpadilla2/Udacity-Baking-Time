@@ -12,5 +12,4 @@
     <string name="widget_recipe_name_text_content_description">Recipe Name</string>
     <string name="widget_recipe_ingredients_text">Please Select a Recipe in the Application</string>
     <string name="widget_recipe_ingredients_text_content_description">Recipe Ingredients</string>
-    <string name="add_widget">Add widget</string>
 </resources>

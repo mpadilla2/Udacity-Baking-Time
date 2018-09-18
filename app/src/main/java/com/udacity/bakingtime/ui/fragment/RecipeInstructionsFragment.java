@@ -24,7 +24,7 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
     private TextView mStepInstructions;
     private Button mPreviousButton;
     private Button mNextButton;
-    boolean isLandscape;
+    private boolean isLandscape;
     private boolean mIsLargeScreen;
 
 
@@ -41,12 +41,6 @@ public class RecipeInstructionsFragment extends ViewLifecycleFragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public RecipeInstructionsFragment(){
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
 
