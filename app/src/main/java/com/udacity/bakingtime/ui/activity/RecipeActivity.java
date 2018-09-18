@@ -36,6 +36,8 @@ public class RecipeActivity extends AppCompatActivity{
     private boolean isLandscape;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
+    private int mRecipeId;
+    private RecipeViewModel mRecipeViewModel;
 
 
     @Override
@@ -49,7 +51,7 @@ public class RecipeActivity extends AppCompatActivity{
         mAppBarLayout = findViewById(R.id.recipe_activity_app_bar);
 
 
-        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
 
         final Observer<List<Recipe>> recipeListObserver = new Observer<List<Recipe>>() {
             @Override
@@ -61,18 +63,9 @@ public class RecipeActivity extends AppCompatActivity{
 
         if (savedInstanceState == null) {
 
-            // Read in from shared preferences.
-            // if app is started from widget, there may be a selected recipe in shared preferences
-            // Create a Recipe object
-            // set the selected recipe using the created recipe object
-            // If had to create object, then launchRecipeIngredientsSteps
-            // else loadRecipeList
-
-            Recipe recipe = SharedPreferencesUtility.getInstance(this).getData();
-
-            if (recipe != null){
-                mRecipeViewModel.setSelectedRecipe(recipe);
-                launchRecipeIngredientsSteps();
+            Intent intent = getIntent();
+            if (intent != null){
+                checkAndLaunchNextFragment(intent);
             } else {
                 loadRecipeList();
             }
@@ -157,10 +150,19 @@ public class RecipeActivity extends AppCompatActivity{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        int mRecipeId = intent.getIntExtra(RECIPE_ID, 0);
+        checkAndLaunchNextFragment(intent);
+    }
+
+    private void checkAndLaunchNextFragment(Intent intent) {
+
+        mRecipeId = intent.getIntExtra(RECIPE_ID, 0);
 
         if (mRecipeId > 0){
+            Recipe recipe = SharedPreferencesUtility.getInstance(this).getData();
+            mRecipeViewModel.setSelectedRecipe(recipe);
             launchRecipeIngredientsSteps();
+        } else {
+            loadRecipeList();
         }
     }
 }

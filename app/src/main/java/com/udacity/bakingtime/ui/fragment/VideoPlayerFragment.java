@@ -157,6 +157,9 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     }
 
 
+    // minsdk is set to 24, no check required for api 23 as it will not run my app
+    // Reference: https://developer.android.com/training/basics/supporting-devices/platforms#version-codes
+    // Reference: https://developer.android.com/guide/topics/manifest/uses-sdk-element#min
     @Override
     public void onPause() {
         super.onPause();
@@ -169,6 +172,11 @@ public class VideoPlayerFragment extends ViewLifecycleFragment{
     }
 
 
+    // minsdk is set to 24, so checking for api 24 is not necessary
+    // Reference: https://developer.android.com/training/basics/supporting-devices/platforms#version-codes
+    // Reference: https://developer.android.com/guide/topics/manifest/uses-sdk-element#min
+    // Release in onStop per And docs, see onStop:
+    // Reference: https://developer.android.com/guide/components/activities/activity-lifecycle
     @Override
     public void onStop() {
         super.onStop();
